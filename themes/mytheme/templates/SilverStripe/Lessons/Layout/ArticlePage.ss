@@ -9,7 +9,9 @@
 				<h1 class="blog-title">How to get your dream property for the best price?</h1>
 
 				<div class="blog-main-image">
-					<img src="http://placehold.it/765x362" alt="" />
+                    <% with $Photo.ScaleWidth(750) %>
+                        <img class="my-custom-class" src="$URL" alt="" width="$Width" height="$Height" />
+                    <% end_with %>
 					<div class="tag"><i class="fa fa-file-text"></i></div>
 				</div>
 
@@ -48,7 +50,9 @@
 					<p>Sed in mauris consectetur lectus ultricies mollis. Nulla at vulputate mi. Phasellus mauris augue, sollicitudin nec ornare congue, posuere eget nulla. Vestibulum pulvinar mauris ut magna interdum lacinia. Nam eu viverra urna. Quisque turpis massa, gravida ut faucibus nec, faucibus non turpis. Mauris facilisis et est a mollis. Mauris non sagittis risus</p>
 				</div>
 
-				<div class="share-wraper col-sm-12 clearfix">
+                <div class="share-wraper col-sm-12 clearfix">
+
+
 					<h5>Share this Post:</h5>
 					<ul class="social-networks">
 						<li><a target="_blank" href="http://www.facebook.com/sharer.php?s=100&amp;p%5Burl%5D=http%3A%2F%2Fwww.wiselythemes.com%2Fhtml%2Fcozy%2Fblog-detail.html%3Ffb%3Dtrue&amp;p%5Bimages%5D%5B0%5D=http%3A%2F%2Fwww.wiselythemes.com%2Fhtml%2Fcozy%2Fimages%2Fnews-img1.jpg&amp;p%5Btitle%5D=Cozy%20Blog%20Post"><i class="fa fa-facebook"></i></a></li>
@@ -58,9 +62,15 @@
 						<li><a href="mailto:?subject=Check%20out%20this%20blog%20post%20from%20Cozy%20Real%20Estate!&amp;body=http://www.wiselythemes.com/html/cozy/blog-detail.html"><i class="fa fa-envelope"></i></a></li>
 					</ul>
 
-					<a class="print-button" href="javascript:window.print();">
-						<i class="fa fa-print"></i>
-					</a>
+					<% if $Brochure %>
+                        <div class="row">
+                            <% with $Brochure %>
+                            <div class="col-sm-12">
+                                <a href="$URL" class="btn btn-warning btn-block"><i class="fa fa-download"></i> Download brochure [$Extension] ($Size)</a>
+                            </div>
+                            <% end_with %>
+                        </div>
+                        <% end_if %>
 				</div>
 
 				<h1 class="section-title">Comments</h1>
