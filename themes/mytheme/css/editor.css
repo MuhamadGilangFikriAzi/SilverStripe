@@ -3,4 +3,6 @@
  */
 
 @import "typography.css?2";
-body.mceContentBody{font-size:13px;}
+body.mceContentBody {
+    font-size: 13px;
+}
