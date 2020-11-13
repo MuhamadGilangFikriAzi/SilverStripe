@@ -9,10 +9,11 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\CurrencyField;
 use SilverStripe\Assets\Image;
 use SilverStripe\Forms\CheckboxField;
-use SilverStripe\Forms\CheckboxSetField;
+use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TabSet;
+use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\DataObject;
@@ -25,7 +26,10 @@ class Property extends DataObject{
         'PricePerNight' => 'Currency',
         'Bedrooms' => 'Int',
         'Bathrooms' => 'Int',
-        'FeaturedOnHomepage' => 'Boolean'
+        'FeaturedOnHomepage' => 'Boolean',
+        'Description' => 'Text',
+        'AvailableStart' => 'Date',
+        'AvailableEnd' => 'Date'
     ];
 
     private static $has_one = [
@@ -61,6 +65,7 @@ class Property extends DataObject{
         $fields = FieldList::create(TabSet::create('Root'));
 
         $fields->addFieldsToTab('Root.Main', TextField::create('Title'));
+        $fields->addFieldsToTab('Root.Main', TextareaField::create('Description'));
         $fields->addFieldsToTab('Root.Main', CurrencyField::create('PricePerNight','Price (Per Night)'));
         $fields->addFieldsToTab('Root.Main', DropdownField::create('Bedrooms')
             ->setSource(ArrayLib::valuekey(range(1,10)))
@@ -84,6 +89,9 @@ class Property extends DataObject{
             'PrimaryPhoto',
             'Primary photo'
         ));
+
+        $fields->addFieldsToTab('Root.Main', DateField::create('AvailableStart', 'Date available (start)'));
+        $fields->addFieldsToTab('Root.Main', DateField::create('AvailableEnd', 'Date available (end)'));
 
         $upload->getValidator()->getAllowedExtensions(array(
             'png','jpeg','jpg','gif'
