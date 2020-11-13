@@ -36,7 +36,7 @@
 				<div id="property-listing" class="list-style clearfix"> <!-- Inject "grid-style1" for grid view-->
 					<div class="row">
 
-                        <% loop $Results %>
+                        <% loop $Result %>
                             <div class="item col-md-4">
                                 <div class="image">
                                     <a href="$Link">

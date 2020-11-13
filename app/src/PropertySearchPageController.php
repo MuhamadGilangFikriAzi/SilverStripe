@@ -14,7 +14,7 @@ use SilverStripe\Forms\Form;
 class PropertySearchPageController extends PageController{
 
     private static $allowed_actions = [
-        'PropertySearchForm'
+        'PropertySearchForm','test'
     ];
 
     public function index(HTTPRequest $request){
