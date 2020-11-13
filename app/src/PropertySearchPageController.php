@@ -10,6 +10,7 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\Forms\Form;
+use SilverStripe\ORM\PaginatedList;
 
 class PropertySearchPageController extends PageController{
 
@@ -80,8 +81,19 @@ class PropertySearchPageController extends PageController{
             ]);
         }
 
+        $paginatedProperties = PaginatedList::create(
+            $properties,
+            $request
+        )
+        ->setPageLength(5)
+        ->setPaginationGetVar('s');
+
+        if($request->isAjax()){
+            return "Ajax response!";
+        }
+
         return [
-            'Result' => $properties
+            'Results' => $paginatedProperties
         ];
     }
 
