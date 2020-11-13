@@ -98,17 +98,17 @@
 			<div class="sidebar gray col-sm-4">
 
 				<!-- BEGIN ADVANCED SEARCH -->
-				<h2 class="section-title">Search Property</h2>
-				<div class="chzn-container-multi">
-					<ul class="chzn-choices">
-					   <li class="search-choice"><span>New York</span><a href="#" class="search-choice-close"></a></li>
-					   <li class="search-choice"><span>Residential</span><a href="#" class="search-choice-close"></a></li>
-					   <li class="search-choice"><span>3 bedrooms</span><a href="#" class="search-choice-close"></a></li>
-					   <li class="search-choice"><span>2 bathrooms</span><a href="#" class="search-choice-close"></a></li>
-					   <li class="search-choice"><span>Min. $150</span><a href="#" class="search-choice-close"></a></li>
-					   <li class="search-choice"><span>Min. $400</span><a href="#" class="search-choice-close"></a></li>
-					</ul>
-				</div>
+                <h2 class="section-title">Search Property</h2>
+                <% if ActiveFilters %>
+                    <div class="chzn-container-multi">
+                        <ul class="chzn-choices">
+                            <% loop $ActiveFilters %>
+                                <li class="search-choice"><span>New York</span><a href="#" class="search-choice-close"></a></li>
+                            <% end_loop %>
+                        </ul>
+                    </div>
+                <% end_if %>
+
 				<form>
 					<div class="form-group">
 						<div class="col-sm-12">
