@@ -10,7 +10,8 @@ use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Assets\Image;
 use SilverStripe\Assets\File;
-
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\CheckboxSetField;
 
 class ArticlePage extends Page{
     private static $can_be_root = false;
@@ -24,6 +25,10 @@ class ArticlePage extends Page{
     private static $has_one = [
         'Photo' => Image::class,
         'Brochure' => File::class
+    ];
+
+    private static $many_many = [
+        'Categories' => ArticleCategory::class
     ];
 
     private static $owns = [
@@ -47,7 +52,20 @@ class ArticlePage extends Page{
 
         $brochure->setFolderName('travel-brochures')->getValidator()->setAllowedExtensions(['pdf']);
 
+        $fields->addFieldsToTab('Root.Categories', CheckboxSetField::create(
+            'Categories',
+            'selected Categories',
+            $this->Parent()->Categories()->map('ID','Title')
+        ));
 
         return $fields;
+    }
+
+    public function CategoriesList(){
+        if($this->Categories()->exists()){
+            return implode(', ', $this->Categories()->column('Title'));
+        }
+
+        return null;
     }
 }

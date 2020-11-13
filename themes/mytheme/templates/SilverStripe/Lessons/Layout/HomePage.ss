@@ -114,6 +114,25 @@
                   <h1 class="section-title">Featured Properties</h1>
 
                   <div class="grid-style1 clearfix">
+                    <% loop $FeaturedProperties %>
+                        <div class="item col-md-4">
+                            <div class="image">
+                                <a href="$Link">
+                                    <h3>$Title</h3>
+                                    <span class="location">$Region.Title</span>
+                                </a>
+                                $PrimaryPhoto.Fill(220,194)
+                            </div>
+                            <div class="price">
+                                <span>$PricePerNight.Nice</span><p>per night<p>
+                            </div>
+                            <ul class="amenities">
+                                <li><i class="icon-bedrooms"></i> $Bedrooms</li>
+                                <li><i class="icon-bathrooms"></i> $Bathrooms</li>
+                            </ul>
+                        </div>
+                        <% end_loop %>
+
                       <div class="item col-md-4">
                           <div class="image">
                               <a href="properties-detail.html">
@@ -282,9 +301,7 @@
                           <div class="tag"><i class="fa fa-file-text"></i></div>
                           <div class="info-blog">
                               <ul class="top-info">
-                                  <li><i class="fa fa-calendar"></i> July 30, 2014</li>
-                                  <li><i class="fa fa-comments-o"></i> 2</li>
-                                  <li><i class="fa fa-tags"></i> Properties, Prices, best deals</li>
+                                <li><i class="fa fa-tags"></i> $CategoriesList</li>
                               </ul>
                               <h3>
                                   <a href="#">How to get your dream property for the best price?</a>

@@ -6,23 +6,23 @@ use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use Page;
 use SilverStripe\Forms\GridField\GridField;
 
-class ArticleHolder extends Page{
+class RegionsPage extends Page{
 
     private static $has_many = [
-        'Categories' => ArticleCategory::class
+        'Regions' => Region::class
     ];
 
-    /**
-     * CMS Fields
-     * @return FieldList
-     */
+    private static $owns = [
+        'Regions'
+    ];
+
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->addFieldsToTab('Root.Categories', GridField::create(
-            'Categories',
-            'Article categories',
-            $this->Categories(),
+        $fields->addFieldsToTab('Root.Regions', GridField::create(
+            'Region',
+            'Region on this page',
+            $this->Regions(),
             GridFieldConfig_RecordEditor::create()
         ));
 

@@ -5,6 +5,8 @@ Simple. by Sara (saratusar.com, @saratusar) for Innovatif - an awesome Slovenia-
 Change it, enhance it and most importantly enjoy it!
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 -->
+$MetaTags(false)
+    <title>One Ring Rentals: $Title</title>
 
 <!--[if !IE]><!-->
 <html lang="$ContentLocale">

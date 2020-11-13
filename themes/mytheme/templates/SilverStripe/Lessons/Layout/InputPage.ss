@@ -11,7 +11,7 @@
                 <div class="card">
                     <div class="card-header">Input Product $test</div>
                     <div class="card-body">
-                        <form action="http://localhost/my-project2/product/store" method="post">
+                        <form action="$BaseHref/product/store" method="post" class="mb-4">
 
                             <div class="form-group">
                                 <label>Title</label>
@@ -28,32 +28,39 @@
 
                         </form>
 
-                        <table class="table table-hover">
+                        <table class="table table-bordered" style="margin-top: 50px;">
                             <tr>
                                 <th>Title</th>
                                 <th>Price</th>
+                                <th>Action</th>
                             </tr>
-                            <% loop $product %>
-                                <tr>
-                                    <td>
-                                        $Title
-                                    </td>
-                                    <td>
-                                        $Price
-                                    </td>
-                                </tr>
-                            <% end_loop %>
-                        </table>
 
-                        <table class="table table-bordered">
                             <tr>
-                                <th>Title</th>
-                                <th>Price</th>
+                                <form action="{$BaseHref}product/" method="GET">
+                                    <td><input type="text" name="title" class="form-control"></td>
+                                    <td><input type="number" name="price" class="form-control"></td>
+                                    <td>
+                                        <div class="form-group">
+                                            <button type="reset" id="reset">reset</button>
+                                            <button type="submit" class="btn btn-sm btn-info">Search</button>
+                                        </div>
+
+                                    </td>
+                                </form>
+
                             </tr>
+
                             <% loop $show %>
                                 <tr>
-                                    <td>$Title</td>
-                                    <td>$Price</td>
+                                    <form action="{$BaseHref}product/update?ID=$ID" method="POST">
+                                        <td><input type="text" name="title" class="form-control" value="$Title"></td>
+                                        <td><input type="number" name="price" class="form-control" value="$Price"></td>
+                                        <td>
+                                            <div class="form-group">
+                                                <a href="{$BaseHref}product/delete?ID=$ID" class="btn btn-sm btn-danger">Delete</a>
+                                                <button type="submit" class="btn btn-info btn-sm">Edit</button></td>
+                                            </div>
+                                    </form>
                                 </tr>
                             <% end_loop %>
                         </table>
