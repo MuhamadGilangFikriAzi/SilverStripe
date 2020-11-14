@@ -13,6 +13,7 @@ use SilverStripe\ORM\ArrayLib;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\PaginatedList;
+use SilverStripe\View\ArrayData;
 
 class PropertySearchPageController extends PageController{
 
@@ -59,7 +60,7 @@ class PropertySearchPageController extends PageController{
             list($getVar, $field, $filter, $labelTemplate) = $filterKeys;
 
             if($value = $request->getVar($getVar)){
-                $activeFilters->push(ArrayDate::create([
+                $activeFilters->push(ArrayData::create([
                     'Label' => sprintf($labelTemplate, $value),
                     'RemoveLink' => HTTP::setGetVar($getVar, null, null, '&'),
                 ]));
@@ -98,7 +99,7 @@ class PropertySearchPageController extends PageController{
             $properties,
             $request
         )
-        ->setPageLength(5)
+        ->setPageLength(15)
         ->setPaginationGetVar('s');
 
         $data = array (

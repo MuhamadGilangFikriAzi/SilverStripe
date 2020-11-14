@@ -12,6 +12,7 @@ use SilverStripe\Assets\Image;
 use SilverStripe\Assets\File;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\CheckboxSetField;
+use SilverStripe\Forms\DropdownField;
 
 class ArticlePage extends Page{
     private static $can_be_root = false;
@@ -24,7 +25,8 @@ class ArticlePage extends Page{
 
     private static $has_one = [
         'Photo' => Image::class,
-        'Brochure' => File::class
+        'Brochure' => File::class,
+        'Region' => Region::class
     ];
 
     private static $many_many = [
@@ -57,6 +59,12 @@ class ArticlePage extends Page{
             'selected Categories',
             $this->Parent()->Categories()->map('ID','Title')
         ));
+
+        $fields->addFieldsToTab('Root.Main', DropdownField::create(
+            'RegionID',
+            'Region',
+            Region::get()->map('ID', 'Title')
+        )->setEmptyString('-- None --'), 'Content');
 
         return $fields;
     }

@@ -28,6 +28,10 @@ class Region extends DataObject{
         'RegionsPage' => RegionsPage::class
     ];
 
+    private static $has_many = [
+        'Article' => ArticlePage::class,
+    ];
+
     private static $owns = [
         'Photo'
     ];
@@ -70,5 +74,13 @@ class Region extends DataObject{
 
     public function LinkMode(){
         return Controller::curr()->getRequest()->param('ID') == $this->ID ? 'current' : 'link';
+    }
+
+    public function ArticlesLink(){
+        $page = ArticleHolder::get()->first();
+
+        if($page){
+            return $page->link('region/'.$this->ID);
+        }
     }
 }
