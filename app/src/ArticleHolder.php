@@ -9,6 +9,7 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\Versioned\Versioned;
+use SilverStripe\View\ArrayData;
 
 class ArticleHolder extends Page{
 
@@ -53,6 +54,23 @@ class ArticleHolder extends Page{
             ->setDistinct(true);
 
         $result = $query->execute();
+
+        if($result){
+            while($record = $result->nextRecord()){
+                list($year, $monthName, $monthNumber) = explode('_', $record['DateString']);
+
+                $list->push(ArrayData::create([
+                    'Year' => $year,
+                    'MonthName' => $monthName,
+                    'MonthNumber' => $monthNumber,
+                    'Link' => $this->link("date/$year/$monthNumber"),
+                    'ArticleCount' => ArticlePage::get()->where([
+                        "DATE_FORMAT(\"Date\",'%Y_%m')" => "{$year}_{$monthNumber}",
+                        "\"ParentID\"" => $this->ID
+                    ])->count()
+                ]));
+            }
+        }
 
         return $list;
     }

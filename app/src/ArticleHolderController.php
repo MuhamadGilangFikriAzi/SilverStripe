@@ -3,10 +3,13 @@
 namespace SilverStripe\Lessons;
 
 use PageController;
+use SilverStripe\Assets\Storage\DBFile;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\PaginatedList;
 
 class ArticleHolderController extends PageController{
+
     private static $allowed_actions = [
         'category',
         'region',
@@ -62,6 +65,34 @@ class ArticleHolderController extends PageController{
         return [
             'SelectedRegion' => $region
         ];
+    }
 
+    public function date(HTTPRequest $request){
+        $year = $request->param('ID');
+        $month = $request->param('ID');
+
+        if(!$year)return $this->httpError(404);
+
+        $startDate = $month ? "{$year}-{$month}-01" : "{$year}-01-01";
+
+        if(strtotime($startDate === false)){
+            return $this->httpError(404, 'Invalid date');
+        }
+
+        $adder = $month ? '+1 month' : '+1 year';
+        $endDate = date('Y-m-d', strtotime(
+            $adder,
+            strtotime($startDate)
+        ));
+
+        $this->artilceList = $this->artilceList->filter([
+            'Date:GreateThanOrEqual' => $startDate,
+            'Date:LessThan' => $endDate
+        ]);
+
+        return [
+            'StartDate' => DBField::create_field('Datetime', $startDate),
+            'EndDate' => DBField::create_field('Datetime', $endDate)
+        ];
     }
 }

@@ -15,6 +15,8 @@
                             <h3>Region: $SelectedRegion.Title</h3>
                         <% else_if $SelectedCategory %>
                             <h3>Category: $SelectedCategory.Title</h3>
+                        <% else_if $StartDate %>
+                            <h3>Showing $StartDate.Date to $EndDate.Date</h3>
                         <% end_if %>
                         <% loop $PaginatedArticles %>
                             <div class="item col-md-6">
@@ -26,6 +28,8 @@
                                 </div> <div class="tag"><i class="fa fa-file-text"></i></div>
                                 <div class="info-blog">
                                     <ul class="top-info">
+                                        <li><i class="fa fa-calendar"></i> $Date.Nice</li>
+                                        <li><i class="fa fa-comments-o"></i> 2</li>
                                         <li><i class="fa fa-tags"></i> $CategoriesList</li>
                                     </ul>
                                     <h3><a href="$Link">$Title</a></h3>
