@@ -4,3 +4,6 @@
 /themes/simple/
 /_resources/
 /public/_resources/
+
+# ignore error log
+errors.log
