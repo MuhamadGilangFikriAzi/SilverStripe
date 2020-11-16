@@ -4,7 +4,8 @@ use SilverStripe\ORM\DataObject;
 
 class Product extends DataObject{
     private static $db = [
-        'Title' => 'Varchar(100)',
+
+       'Title' => 'Varchar(100)',
         'Price' => 'Double'
     ];
 }

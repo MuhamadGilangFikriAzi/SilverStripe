@@ -22,11 +22,13 @@ class PropertySearchPageController extends PageController{
     ];
 
     public function index(HTTPRequest $request){
+        // print_r($request);die();
 
         $properties = Property::get();
+        // print_r($properties);die();
         $activeFilters = ArrayList::create();
 
-        if($search = $request->getVar('Keywords')){
+        if($search = $request->getVar('keywords')){
             $activeFilters->push(ArrayData::create([
                 'Label' => "Keyword : '$search'",
                 'RemoveLink' => HTTP::setGetVar('Keywords', null, null, '&'),
@@ -37,7 +39,7 @@ class PropertySearchPageController extends PageController{
             ));
         }
 
-        if($arrival = $request->getVar('ArrivalDate')){
+        if($arrival = $request->getVar('search_nights')){
             $arrivalStamp = strtotime($arrival);
             $nightAdder = '+'.$request->getVar('Nights'). ' days';
             $startDate = date('Y-m-d', $arrivalStamp);
@@ -71,27 +73,31 @@ class PropertySearchPageController extends PageController{
             }
         }
 
-        if($bedrooms = $request->getVar('Bedrooms')){
+        if($bedrooms = $request->getVar('search_bedrooms')){
+
             $properties = $properties->filter([
                 'Bedrooms:GreaterThanOrEqual' => $bedrooms
             ]);
+
+            // var_dump($properties);die();
         }
 
-        if($bathrooms = $request->getVar('Bathrooms')){
+        if($bathrooms = $request->getVar('search_bathrooms')){
             $properties = $properties->filter([
                 'Bathrooms:GreaterThanOrEqual' => $bathrooms
             ]);
         }
 
-        if($minPrice = $request->getVar('MinPrice')){
+        if($minPrice = $request->getVar('search_minprice')){
+
             $properties = $properties->filter([
-                'MinPrice:GreaterThanOrEqual' => $minPrice
+                'PricePerNight:GreaterThanOrEqual' => $minPrice
             ]);
         }
 
-        if($maxPrice = $request->getVar('MaxPrice')){
+        if($maxPrice = $request->getVar('search_maxprice')){
             $properties = $properties->filter([
-                'MaxPrice:GreaterThanOrEqual' => $maxPrice
+                'PricePerNight:GreaterThanOrEqual' => $maxPrice
             ]);
         }
 

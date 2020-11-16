@@ -172,7 +172,7 @@
                 <h2 class="section-title">Regions</h2>
                 <ul class="categories">
                 <% loop $Regions %>
-                    <li><a href="$ArticlesLink">$Title <span>($Articles.count)</span></a></li>
+                    <li><a href="$ArticlesLink">$Title <span>($Article.count)</span></a></li>
                 <% end_loop %>
                 </ul>
 
