@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Lessons;
 
+use City;
 use Client;
 use PageController;
 
@@ -21,6 +22,8 @@ class ClientPageController extends PageController{
     public function index(){
         $data = Client::get();
         // print_r($data->first());die();
+
+        // print_r(City::get()->map('ID','Name'));die();
         return ['data' => $data];
     }
 

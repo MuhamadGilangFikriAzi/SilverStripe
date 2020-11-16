@@ -37,7 +37,7 @@
                     </div>
                 </div>
 
-                <div class="card">
+                <div class="card" style="margin-top: 50px;">
                     <div class="card-header">Input Client</div>
 
                     <div class="card-body">

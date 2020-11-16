@@ -5,6 +5,7 @@ namespace SilverStripe\Lessons;
 use City;
 use Page;
 use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\CheckboxSetField;
 
 class ClientPage extends Page
 {
@@ -20,10 +21,10 @@ class ClientPage extends Page
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->addFieldsToTab('Root.City', CheckboxField::create(
+        $fields->addFieldsToTab('Root.City', CheckboxSetField::create(
             'City',
             'Select City',
-            $this->City()->map('ID', 'Name')
+            City::get()->map('ID','Name')
         ));
 
         return $fields;

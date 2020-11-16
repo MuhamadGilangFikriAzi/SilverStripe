@@ -3,14 +3,17 @@
 namespace SilverStripe\Lessons;
 
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
-use City;
 use Page;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\TextField;
 
-class CityPage extends Page{
-
+class HotelPage extends Page{
     private static $has_many = [
-        'City' => City::class
+        'Hotel' => Hotel::class
+    ];
+
+    private static $owns = [
+        'Hotel'
     ];
 
     /**
@@ -20,24 +23,12 @@ class CityPage extends Page{
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->addFieldToTab('Root.City', GridField::create(
-            'City',
-            'City',
-            $this->City(),
+        $fields->addFieldToTab('Root.Main', GridField::create(
+            'Title',
+            'Title Text',
+            $this->Hotel(),
             GridFieldConfig_RecordEditor::create()
         ));
-
         return $fields;
     }
-
-    /**
-     * CMS Fields
-     * @return FieldList
-     */
-    // public function getCMSFields()
-    // {
-    //     $fields = parent::getCMSFields();
-
-    //     return $fields;
-    // }
 }

@@ -27,6 +27,7 @@ class City extends DataObject{
         'Image'
     ];
 
+
     /**
      * CMS Fields
      * @return FieldList
@@ -45,3 +46,4 @@ class City extends DataObject{
     }
 
 }
+

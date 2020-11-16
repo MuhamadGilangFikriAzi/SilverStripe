@@ -27,3 +27,7 @@ SilverStripe\Core\Injector\Injector:
       ResolutionFileIDHelpers:
         - '%$SilverStripe\Assets\FilenameParsing\HashFileIDHelper'
       VersionedStage: Stage
+
+SilverStripe\SiteConfig\SiteConfig:
+  extensions:
+    - SilverStripe\Lessons\SiteConfigExtension
