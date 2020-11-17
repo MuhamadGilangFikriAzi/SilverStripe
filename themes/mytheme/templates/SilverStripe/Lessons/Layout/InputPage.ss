@@ -29,13 +29,16 @@
                         </form>
 
                         <table class="table table-bordered" style="margin-top: 50px;" id="table">
+                           <thead>
                             <tr>
                                 <th>Title</th>
                                 <th>Price</th>
                                 <th>Action</th>
                             </tr>
+                           </thead>
 
-                            <tr>
+
+                            <!-- <tr>
                                 <form action="{$BaseHref}product/" method="GET">
                                     <td><input type="text" name="title" class="form-control"></td>
                                     <td><input type="number" name="price" class="form-control"></td>
@@ -48,11 +51,14 @@
                                     </td>
                                 </form>
 
-                            </tr>
-
-                            <% loop $show %>
+                            </tr> -->
+                            <tbody>
+                                <% loop $show %>
                                 <tr>
-                                    <form action="{$BaseHref}product/update?ID=$ID" method="POST">
+                                    <td>$Title</td>
+                                    <td>$Price</td>
+                                    <td>test</td>
+                                    <!-- <form action="{$BaseHref}product/update?ID=$ID" method="POST">
                                         <td><input type="text" name="title" class="form-control" value="$Title"></td>
                                         <td><input type="number" name="price" class="form-control" value="$Price"></td>
                                         <td>
@@ -60,9 +66,11 @@
                                                 <a href="{$BaseHref}product/delete?ID=$ID" class="btn btn-sm btn-danger">Delete</a>
                                                 <button type="submit" class="btn btn-info btn-sm">Edit</button></td>
                                             </div>
-                                    </form>
+                                    </form> -->
                                 </tr>
                             <% end_loop %>
+                            </tbody>
+
                         </table>
                     </div>
                 </div>
@@ -72,10 +80,9 @@
 	</div>
 </div>
 
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('#table').DataTable({
-            "paging" : true,
-        });
+        $('#table').DataTable();
     });
 </script>
