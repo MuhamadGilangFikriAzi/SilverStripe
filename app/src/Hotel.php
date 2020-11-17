@@ -2,7 +2,14 @@
 
 namespace SilverStripe\Lessons;
 
+use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\Image;
+use SilverStripe\Assets\Upload;
+use SilverStripe\Forms\CurrencyField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\TabSet;
+use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
 
 class Hotel extends DataObject{
@@ -28,7 +35,15 @@ class Hotel extends DataObject{
 
     public function getCMSFields()
     {
-        $fields = parent::getCMSFields();
+        $fields = FieldList::create(TabSet::create('Root'));
+        $fields->addFieldsToTab([
+            TextField::create('Title'),
+            NumericField::create('Bedroom'),
+            NumericField::create('Bathroom'),
+            CurrencyField::create('Price')
+        ]);
+
+        $fields->addFieldToTab('Root.Picture', UploadField::create('Picture'));
 
         return $fields;
     }

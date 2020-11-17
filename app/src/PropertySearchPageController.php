@@ -28,6 +28,10 @@ class PropertySearchPageController extends PageController{
         // print_r($properties);die();
         $activeFilters = ArrayList::create();
 
+        if($request->isAjax()){
+            return 'Ajax request';
+        }
+
         if($search = $request->getVar('keywords')){
             $activeFilters->push(ArrayData::create([
                 'Label' => "Keyword : '$search'",
@@ -91,7 +95,7 @@ class PropertySearchPageController extends PageController{
         if($minPrice = $request->getVar('search_minprice')){
 
             $properties = $properties->filter([
-                'PricePerNight:GreaterThanOrEqual' => $minPrice
+                'PricePerNight:LessThanOrEqual' => $minPrice
             ]);
         }
 
@@ -105,7 +109,7 @@ class PropertySearchPageController extends PageController{
             $properties,
             $request
         )
-        ->setPageLength(15)
+        ->setPageLength(5)
         ->setPaginationGetVar('s');
 
         $data = array (

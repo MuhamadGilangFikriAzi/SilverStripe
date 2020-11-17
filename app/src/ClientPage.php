@@ -4,6 +4,7 @@ namespace SilverStripe\Lessons;
 
 use City;
 use Page;
+use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\CheckboxSetField;
 
@@ -26,6 +27,8 @@ class ClientPage extends Page
             'Select City',
             City::get()->map('ID','Name')
         ));
+
+        $fields->addFieldToTab('Root.Picture', UploadField::create('Picture'));
 
         return $fields;
     }
