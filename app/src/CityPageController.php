@@ -12,7 +12,7 @@ class CityPageController extends PageController{
     public function index(HTTPRequest $request){
         $city = City::get();
 
-        // var_dump($data->first());die();
+        // var_dump($city->where("Name LIKE '%pur%'")->first());die();
 
         $paginatedList = PaginatedList::create(
             $city,

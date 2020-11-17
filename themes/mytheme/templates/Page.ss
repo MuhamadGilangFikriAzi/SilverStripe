@@ -30,6 +30,10 @@ $MetaTags(false)
 	<% require themedCSS('layout') %>
     <link rel="shortcut icon" href="themes/simple/images/favicon.ico" />
     <% require javascript('//code.jquery.com/jquery-3.3.1.min.js') %>
+
+    <script>
+        require( 'datatables.net-dt' )();
+    </script>
 </head>
 <body class="$ClassName.ShortName<% if not $Menu(2) %> no-sidebar<% end_if %>" <% if $i18nScriptDirection %>dir="$i18nScriptDirection"<% end_if %>>
 <% include Header %>

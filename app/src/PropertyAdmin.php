@@ -10,7 +10,8 @@ class PropertyAdmin extends ModelAdmin{
 
     private static $url_segment = 'properties';
 
-    private static $managed_models = [
+
+   private static $managed_models = [
         Property::class
     ];
 

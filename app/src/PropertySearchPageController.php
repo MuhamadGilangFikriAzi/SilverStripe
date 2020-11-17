@@ -21,6 +21,7 @@ class PropertySearchPageController extends PageController{
         'PropertySearchForm','test'
     ];
 
+
     public function index(HTTPRequest $request){
         // print_r($request);die();
 

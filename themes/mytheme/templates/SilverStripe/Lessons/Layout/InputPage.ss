@@ -28,7 +28,7 @@
 
                         </form>
 
-                        <table class="table table-bordered" style="margin-top: 50px;">
+                        <table class="table table-bordered" style="margin-top: 50px;" id="table">
                             <tr>
                                 <th>Title</th>
                                 <th>Price</th>
@@ -71,3 +71,11 @@
 		</div>
 	</div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('#table').DataTable({
+            "paging" : true,
+        });
+    });
+</script>
