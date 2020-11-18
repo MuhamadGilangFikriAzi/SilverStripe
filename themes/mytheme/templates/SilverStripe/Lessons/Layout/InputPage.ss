@@ -83,6 +83,38 @@
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('#table').DataTable();
+        $('#table').DataTable({
+            'language':{
+                    "decimal":        "",
+                    "emptyTable":     "Tidak ada data di dalam table",
+                    "info":           "Menampilkan _START_ - _END_ dari total _TOTAL_ data",
+                    "infoEmpty":      "Data tidak ditemukan",
+                    "infoFiltered":   "(Mencari dari _MAX_ total data)",
+                    "infoPostFix":    "",
+                    "thousands":      ",",
+                    "lengthMenu":     "Menampilkan _MENU_ data",
+                    "loadingRecords": "Loading...",
+                    "processing":     "Processing...",
+                    "search":         "Cari:",
+                    "zeroRecords":    "Tidak ada data yang ditemukan",
+                    "paginate": {
+                        "first":      "Pertama",
+                        "last":       "Terakhir",
+                        "next":       ">",
+                        "previous":   "<"
+                    },
+                    "aria": {
+                        "sortAscending":  ": activate to sort column ascending",
+                        "sortDescending": ": activate to sort column descending"
+                    }
+                },
+
+                "columnDefs": [ {
+                    "searchable": false,
+                    "orderable": false,
+                    "targets": 0
+                } ],
+                "order": [[ 1, 'asc' ]]
+        });
     });
 </script>
