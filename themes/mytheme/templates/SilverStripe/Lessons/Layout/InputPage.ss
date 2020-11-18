@@ -5,6 +5,7 @@
     $Content
 	<div class="container">
 		<div class="row">
+            <div id="baseUrl" data-url="{$BaseHref}product/getData"></div>
 
 			<!-- BEGIN MAIN CONTENT -->
             <div class="main col-sm-8">
@@ -33,7 +34,6 @@
                             <tr>
                                 <th>Title</th>
                                 <th>Price</th>
-                                <th>Action</th>
                             </tr>
                            </thead>
 
@@ -52,13 +52,12 @@
                                 </form>
 
                             </tr> -->
-                            <tbody>
+                            <!-- <tbody>
                                 <% loop $show %>
                                 <tr>
                                     <td>$Title</td>
                                     <td>$Price</td>
-                                    <td>test</td>
-                                    <!-- <form action="{$BaseHref}product/update?ID=$ID" method="POST">
+                                    <form action="{$BaseHref}product/update?ID=$ID" method="POST">
                                         <td><input type="text" name="title" class="form-control" value="$Title"></td>
                                         <td><input type="number" name="price" class="form-control" value="$Price"></td>
                                         <td>
@@ -66,10 +65,10 @@
                                                 <a href="{$BaseHref}product/delete?ID=$ID" class="btn btn-sm btn-danger">Delete</a>
                                                 <button type="submit" class="btn btn-info btn-sm">Edit</button></td>
                                             </div>
-                                    </form> -->
+                                    </form>
                                 </tr>
                             <% end_loop %>
-                            </tbody>
+                            </tbody> -->
 
                         </table>
                     </div>
@@ -83,7 +82,11 @@
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function () {
+        let url = $("#baseUrl").data("url");
+
         $('#table').DataTable({
+            "processing" : false,
+            "serverside" : true,
             'language':{
                     "decimal":        "",
                     "emptyTable":     "Tidak ada data di dalam table",
@@ -108,13 +111,18 @@
                         "sortDescending": ": activate to sort column descending"
                     }
                 },
+                "order": [[ 1, 'asc' ]],
+                "ajax" : {
+                    "url" : url,
+                    "type" : "POST"
+                },
 
                 "columnDefs": [ {
-                    "searchable": false,
-                    "orderable": false,
+                    "searchable": true,
+                    "orderable": true,
                     "targets": 0
                 } ],
-                "order": [[ 1, 'asc' ]]
+
         });
     });
 </script>
