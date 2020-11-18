@@ -77,13 +77,13 @@ class InputPageController extends PageController{
         $arr = array();
         $count = 0;
 
-        $start = isset($_REQUEST['start']) ? $_REQUEST['start'] : 0;
-        $length = isset($_REQUEST['length']) ? $_REQUEST['length'] : 10;
+        // $start = isset($_REQUEST['start']) ? $_REQUEST['start'] : 0;
+        // $length = isset($_REQUEST['length']) ? $_REQUEST['length'] : 10;
 
-        $filter_record = (isset($_REQUEST['filter_record'])) ? $_REQUEST['filter_record'] : '';
-        $param_array = [];
-        parse_str($filter_record, $param_array);
-        $list = $this->getList($param_array);
+        // $filter_record = (isset($_REQUEST['filter_record'])) ? $_REQUEST['filter_record'] : '';
+        // $param_array = [];
+        // parse_str($filter_record, $param_array);
+        // $list = $this->getList($param_array);
         // $result = $this->filterList($param_array, $list);
 
         $data = Product::get();

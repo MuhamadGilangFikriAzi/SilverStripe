@@ -85,7 +85,7 @@
         let url = $("#baseUrl").data("url");
 
         $('#table').DataTable({
-            "processing" : false,
+            "processing" : true,
             "serverside" : true,
             'language':{
                     "decimal":        "",
