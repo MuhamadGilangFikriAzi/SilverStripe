@@ -50,4 +50,12 @@ class MaterialPage extends Page{
 
         return $fields;
     }
+
+    public function CategoriesList(){
+        if($this->MaterialCategory()->exists()){
+            return implode(', ', $this->MaterialCategory()->column('Title'));
+        }
+
+        return null;
+    }
 }
