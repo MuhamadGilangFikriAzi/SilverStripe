@@ -78,13 +78,13 @@ class InputPageController extends PageController{
         $count = 0;
         $data = Product::get();
 
+        
         $draw = isset($_REQUEST['draw']) ? $_REQUEST['draw'] : '';
         $start = isset($_REQUEST['start']) ? $_REQUEST['start'] : 0;
         $length = isset($_REQUEST['length']) ? $_REQUEST['length'] : 10;
 
+        //Filter
         $filter_record = (isset($_REQUEST['filter_record'])) ? $_REQUEST['filter_record'] : '';
-        $sorting = (isset($_REQUEST['sorting'])) ? $_REQUEST['sorting'] : '';
-
         $param_array = [];
         parse_str($filter_record, $param_array);
 
@@ -97,27 +97,24 @@ class InputPageController extends PageController{
                 $data = $data->where("Price LIKE '%".$param_array['price']."%'");
             }
         }
+        //End Filter
 
-        // $list = $this->getList($param_array);
-        // $result = $this->filterList($param_array, $list);
+        //Sorting
+        $colomn = ['Title','Price'];
+        $sorting_colomn = (isset($_REQUEST['order'][0]['column'])) ? $_REQUEST['order'][0]['column'] : 0;
+        $sorting_type = (isset($_REQUEST['order'][0]['dir'])) ? $_REQUEST['order'][0]['dir'] : 'desc';
+        $data = $data->sort($colomn[$sorting_colomn], $sorting_type);
+        //End Sorting
 
-
+        //Set Data for return ajax
         $dataCont = $data->count();
         $data = $data->limit($length, $start);
 
-        // var_dump($data);die();
         foreach ($data as $value) {
             $count += 1;
             $tempArray = array();
             $tempArray[] = $value->Title;
             $tempArray[] = $value->Price;
-            // foreach (static::$tableData as $key => $value) {
-            //     if(isset($val->{$key})){
-            //         $tempArray[] = $val->{$key};
-            //     }else{
-            //         $tempArray[] = $this->{$key}($val);
-            //     }
-            // }
 
             $arr[] = $tempArray;
         }
@@ -131,6 +128,7 @@ class InputPageController extends PageController{
             'sql' => '',
             'draw' => $draw
         );
+        //End of set data
 
         return json_encode($result);
     }

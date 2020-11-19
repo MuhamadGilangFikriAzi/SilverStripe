@@ -84,7 +84,7 @@
             "serverSide" : true,
             "paging" : true,
             "searching" : false,
-            "ordering" : false,
+            "ordering" : true,
             'language':{
                     "decimal":        "",
                     "emptyTable":     "Tidak ada data di dalam table",
