@@ -78,7 +78,7 @@ class InputPageController extends PageController{
         $count = 0;
         $data = Product::get();
 
-        
+
         $draw = isset($_REQUEST['draw']) ? $_REQUEST['draw'] : '';
         $start = isset($_REQUEST['start']) ? $_REQUEST['start'] : 0;
         $length = isset($_REQUEST['length']) ? $_REQUEST['length'] : 10;

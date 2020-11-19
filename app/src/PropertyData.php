@@ -1,55 +1,55 @@
 <?php
 
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\Image;
+use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\SelectField;
 use SilverStripe\Forms\TabSet;
+use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
 
 class PropertyData extends DataObject{
 
     private static $db = [
-        'Title' => 'Varchar',
-        'Address' => 'Varchar',
-        'Phone' => 'Varchar'
+        'Address' => 'Text',
+        'AddressFull' => 'Text',
+        'Phone' => 'Varchar(20)',
+        'VendorName' => 'Varchar(100)',
+        'VendorPhone' => 'Varchar(20)'
     ];
 
     private static $has_one = [
-        'Image' => Image::class
+        'Category' => CategoryData::class
+    ];
 
-   ];
-
-    private static $owns = [
-        'Image'
+    private static $has_many = [
+        'Agent' => AgentData::class
     ];
 
     private static $summary_fields = [
-        'Title' => 'Name',
-        'Address' => 'Address',
-        'Phone' => 'Phone'
+        'Address' => "Address",
+        'Phone' => "Phone number",
+        'VendorName' => "Vendor Name"
     ];
 
-    private static $searchable_fields = [
-        'Title',
-        'Address',
-        'Phone'
-    ];
-
-    /**
-     * CMS Fields
-     * @return FieldList
-     */
     public function getCMSFields()
     {
-        $fields = parent::getCMSFields();
+        $fields = FieldList::create(TabSet::create('Root'));
 
-        $fields->addFieldToTab('Root.Main', $phone = TextField::create('Phone', 'Phone'));
-
-        $fields->addFieldToTab('Root.Image', $uploaded = UploadField::create('Image', 'Input image here'));
-        $uploaded->setFolderName('propertyData-images');
-        $uploaded->setAllowedExtensions(array('png', 'jpg', 'jpeg', 'gif'));
-
+        $fields->addFieldToTab('Root.Main', TextField::create('Address', 'Address'));
+        $fields->addFieldToTab('Root.Main', TextareaField::create('AddressFull', 'Address Full'));
+        $fields->addFieldToTab('Root.Main', TextField::create('Phone', 'Input Phone number'));
+        $fields->addFieldToTab('Root.Main', TextField::create('VendorName', 'Input Vendor Name'));
+        $fields->addFieldToTab('Root.Main', TextField::create('VendorPhone', 'Input Vendor phone'));
+        $fields->addFieldToTab('Root.Category', DropdownField::create(
+            'CategoryID',
+            'Select Category',
+            CategoryData::get()->map('ID', 'Name')
+        )->setEmptyString('-- select category --'));
         return $fields;
     }
 }

@@ -10,7 +10,7 @@
 			<!-- BEGIN MAIN CONTENT -->
             <div class="main col-sm-8">
                 <div class="card">
-                    <div class="card-header">Input Product $test</div>
+                    <!-- <div class="card-header">Input Product $test</div> -->
                     <div class="card-body">
                         <!-- <form action="$BaseHref/product/store" method="post" class="mb-4">
 
@@ -39,7 +39,7 @@
                                     <input type="number" name="price" class="form-control" placeholder="Search Price">
                                 </div>
 
-                                <button style="float: right;" type="submit" class="btn btn-primary">Search</button>
+                                <button style="float: right; margin-right: 17px;" type="submit" class="btn btn-primary">Search</button>
                             </form>
                         </div>
 
@@ -88,7 +88,7 @@
             'language':{
                     "decimal":        "",
                     "emptyTable":     "Tidak ada data di dalam table",
-                    "info":           "Menampilkan _START_ - _END_ dari total _TOTAL_ data dari _PAGE_ kolom dari _PAGES_",
+                    "info":           "Menampilkan _START_ - _END_ dari total _TOTAL_ data pada kolom _PAGE_ dari _PAGES_ kolom ",
                     "infoEmpty":      "Data tidak ditemukan",
                     "infoFiltered":   "(Mencari dari _MAX_ total data)",
                     "infoPostFix":    "",
