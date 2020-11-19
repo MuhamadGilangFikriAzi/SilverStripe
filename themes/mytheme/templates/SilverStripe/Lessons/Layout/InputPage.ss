@@ -12,7 +12,7 @@
                 <div class="card">
                     <div class="card-header">Input Product $test</div>
                     <div class="card-body">
-                        <form action="$BaseHref/product/store" method="post" class="mb-4">
+                        <!-- <form action="$BaseHref/product/store" method="post" class="mb-4">
 
                             <div class="form-group">
                                 <label>Title</label>
@@ -27,7 +27,21 @@
                             <button type="reset" class="btn btn-danger">Reset</button>
                             <button type="submit" class="btn btn-success">Submit</button>
 
-                        </form>
+                        </form> -->
+
+                        <div class="row" style="margin-top: 50px;">
+                            <form id="search_field" method="POST">
+                                <div class="col-sm-6">
+                                    <input type="text" name="title"  class="form-control" placeholder="Search Title">
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <input type="number" name="price" class="form-control" placeholder="Search Price">
+                                </div>
+
+                                <button style="float: right;" type="submit" class="btn btn-primary">Search</button>
+                            </form>
+                        </div>
 
                         <table class="table table-bordered" style="margin-top: 50px;" id="table">
                            <thead>
@@ -36,39 +50,6 @@
                                 <th>Price</th>
                             </tr>
                            </thead>
-
-
-                            <!-- <tr>
-                                <form action="{$BaseHref}product/" method="GET">
-                                    <td><input type="text" name="title" class="form-control"></td>
-                                    <td><input type="number" name="price" class="form-control"></td>
-                                    <td>
-                                        <div class="form-group">
-                                            <button type="reset" id="reset">reset</button>
-                                            <button type="submit" class="btn btn-sm btn-info">Search</button>
-                                        </div>
-
-                                    </td>
-                                </form>
-
-                            </tr> -->
-                            <!-- <tbody>
-                                <% loop $show %>
-                                <tr>
-                                    <td>$Title</td>
-                                    <td>$Price</td>
-                                    <form action="{$BaseHref}product/update?ID=$ID" method="POST">
-                                        <td><input type="text" name="title" class="form-control" value="$Title"></td>
-                                        <td><input type="number" name="price" class="form-control" value="$Price"></td>
-                                        <td>
-                                            <div class="form-group">
-                                                <a href="{$BaseHref}product/delete?ID=$ID" class="btn btn-sm btn-danger">Delete</a>
-                                                <button type="submit" class="btn btn-info btn-sm">Edit</button></td>
-                                            </div>
-                                    </form>
-                                </tr>
-                            <% end_loop %>
-                            </tbody> -->
 
                         </table>
                     </div>
@@ -81,16 +62,33 @@
 
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script>
+    var params = [];
+    var table;
+    var sorting = [];
     $(document).ready(function () {
         let url = $("#baseUrl").data("url");
 
-        $('#table').DataTable({
+        let param_asal = 1;
+
+        $("#search_field").submit(function(evt, ui)
+        {
+            evt.preventDefault();
+            params = $(this).serialize();
+            console.log(params);
+
+            table.ajax.reload();
+        });
+
+        table = $('#table').DataTable({
             "processing" : true,
-            "serverside" : true,
+            "serverSide" : true,
+            "paging" : true,
+            "searching" : false,
+            "ordering" : false,
             'language':{
                     "decimal":        "",
                     "emptyTable":     "Tidak ada data di dalam table",
-                    "info":           "Menampilkan _START_ - _END_ dari total _TOTAL_ data",
+                    "info":           "Menampilkan _START_ - _END_ dari total _TOTAL_ data dari _PAGE_ kolom dari _PAGES_",
                     "infoEmpty":      "Data tidak ditemukan",
                     "infoFiltered":   "(Mencari dari _MAX_ total data)",
                     "infoPostFix":    "",
@@ -114,7 +112,11 @@
                 "order": [[ 1, 'asc' ]],
                 "ajax" : {
                     "url" : url,
-                    "type" : "POST"
+                    data : function(d){
+                        d.filter_record = params,
+                        d.sorting = sorting
+                    }
+                    // "type" : "POST"
                 },
 
                 "columnDefs": [ {
@@ -122,7 +124,8 @@
                     "orderable": true,
                     "targets": 0
                 } ],
-
+                "deferRender" : true
         });
     });
+
 </script>

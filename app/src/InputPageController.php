@@ -76,19 +76,35 @@ class InputPageController extends PageController{
     public function getData(){
         $arr = array();
         $count = 0;
+        $data = Product::get();
 
-        // $start = isset($_REQUEST['start']) ? $_REQUEST['start'] : 0;
-        // $length = isset($_REQUEST['length']) ? $_REQUEST['length'] : 10;
+        $draw = isset($_REQUEST['draw']) ? $_REQUEST['draw'] : '';
+        $start = isset($_REQUEST['start']) ? $_REQUEST['start'] : 0;
+        $length = isset($_REQUEST['length']) ? $_REQUEST['length'] : 10;
 
-        // $filter_record = (isset($_REQUEST['filter_record'])) ? $_REQUEST['filter_record'] : '';
-        // $param_array = [];
-        // parse_str($filter_record, $param_array);
+        $filter_record = (isset($_REQUEST['filter_record'])) ? $_REQUEST['filter_record'] : '';
+        $sorting = (isset($_REQUEST['sorting'])) ? $_REQUEST['sorting'] : '';
+
+        $param_array = [];
+        parse_str($filter_record, $param_array);
+
+        if(!empty($param_array)){
+            if($param_array['title']){
+                $data = $data->where("Title LIKE '%".$param_array['title']."%'");
+            }
+
+            if($param_array['price']){
+                $data = $data->where("Price LIKE '%".$param_array['price']."%'");
+            }
+        }
+
         // $list = $this->getList($param_array);
         // $result = $this->filterList($param_array, $list);
 
-        $data = Product::get();
 
-        $dataCpy = $data;
+        $dataCont = $data->count();
+        $data = $data->limit($length, $start);
+
         // var_dump($data);die();
         foreach ($data as $value) {
             $count += 1;
@@ -109,10 +125,11 @@ class InputPageController extends PageController{
         $result = array(
             'data' => $arr,
             'colomn_sort' => "",
-            'params_arr' => "",
-            'recordsTotal' => $dataCpy->count(),
-            'recordsFiltered' => $data->count(),
-            'sql' => ''
+            'params_arr' => $filter_record,
+            'recordsTotal' => $dataCont,
+            'recordsFiltered' => $dataCont,
+            'sql' => '',
+            'draw' => $draw
         );
 
         return json_encode($result);
@@ -121,7 +138,6 @@ class InputPageController extends PageController{
     public function getList($param){
 
     }
-
 
     public function filterList($param, $list){
 
@@ -154,5 +170,13 @@ class InputPageController extends PageController{
         }
 
         return $list;
+    }
+
+    function getCusmtomColomns(){
+        $colomn = array();
+
+        // switch($config){
+        //     case ''
+        // }
     }
 }
