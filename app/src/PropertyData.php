@@ -3,6 +3,7 @@
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\Image;
+use SilverStripe\Forms\CheckboxSetField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
@@ -30,6 +31,10 @@ class PropertyData extends DataObject{
         'Agent' => AgentData::class
     ];
 
+    private static $belongs_many_many = [
+        'Facility' => FacilityData::class
+    ];
+
     private static $summary_fields = [
         'Address' => "Address",
         'Phone' => "Phone number",
@@ -50,6 +55,11 @@ class PropertyData extends DataObject{
             'Select Category',
             CategoryData::get()->map('ID', 'Name')
         )->setEmptyString('-- select category --'));
+        $fields->addFieldToTab('Root.Facility', CheckboxSetField::create(
+            'Facility',
+            'Select Facility',
+            FacilityData::get()->map('ID', 'Name')
+        ));
         return $fields;
     }
 }
