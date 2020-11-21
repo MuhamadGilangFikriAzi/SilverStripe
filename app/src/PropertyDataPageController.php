@@ -30,6 +30,16 @@ class PropertyDataPageController extends PageController{
             PropertyData::create($create_array)->write();
         }
 
+         //Edit
+         $edit = (isset($_REQUEST['edit'])) ? $_REQUEST['edit'] : '';
+         $edit_array = [];
+         parse_str($edit, $edit_array);
+
+         if(!empty($edit_array)){
+            $this->update($edit_array);
+         }
+         //End Filter
+
         //Filter
         $filter_record = (isset($_REQUEST['filter_record'])) ? $_REQUEST['filter_record'] : '';
         $param_array = [];
@@ -42,6 +52,14 @@ class PropertyDataPageController extends PageController{
 
             if($param_array['Phone']){
                 $data = $data->where("Phone LIKE '%".$param_array['Phone']."%'");
+            }
+
+            if($param_array['VendorName']){
+                $data = $data->where("VendorName LIKE '%".$param_array['VendorName']."%'");
+            }
+
+            if($param_array['VendorPhone']){
+                $data = $data->where("VendorPhone LIKE '%".$param_array['VendorPhone']."%'");
             }
         }
         //End Filter
@@ -65,7 +83,7 @@ class PropertyDataPageController extends PageController{
             $tempArray[] = $value->Phone;
             $tempArray[] = $value->VendorName;
             $tempArray[] = $value->VendorPhone;
-            $tempArray[] = "<button class='btn btn-info edit' data-ID='".$value->ID."' data-toggle='modal' data-target='#addModal'>edit</button> <button class='btn btn-danger delete' data-ID='".$value->ID."' >delete</button> ";
+            $tempArray[] = "<button class='btn btn-info edit' data-ID='".$value->ID."' data-toggle='modal' data-target='#editModal'>edit</button> <button class='btn btn-danger delete' data-ID='".$value->ID."' >delete</button> ";
 
             $arr[] = $tempArray;
         }
@@ -94,14 +112,33 @@ class PropertyDataPageController extends PageController{
     public function edit(){
         $proprty = PropertyData::get()->byID($_POST['id']);
 
-        $data = [
+        $result = [
             'message' => '',
             'status' => 200,
-            'data' => $proprty
+            'data' => [
+                'ID' => $proprty->ID,
+                'Address' => $proprty->Address,
+                'AddressFull' => $proprty->AddressFull,
+                'Phone' => $proprty->Phone,
+                'VendorName' => $proprty->VendorName,
+                'VendorPhone' => $proprty->VendorPhone
+            ]
         ];
 
-        print_r($proprty);die();
-        return $data;
+        return json_encode($result);
+    }
+
+    public function update($data){
+        // print_r($data);die();
+        $update = PropertyData::get()->byID($data['id']);
+        $update->Address = $data['Address'];
+        $update->AddressFull = $data['AddressFull'];
+        $update->Phone = $data['Phone'];
+        $update->VendorName = $data['VendorName'];
+        $update->VendorPhone = $data['VendorPhone'];
+        $update->write();
+
+        return 'succes';
     }
 
 }

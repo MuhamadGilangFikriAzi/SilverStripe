@@ -36,15 +36,15 @@
                                 </div>
 
                                 <div class="col-sm-3">
-                                    <input type="number" name="Phone" class="form-control search" placeholder="Search Phone...">
+                                    <input type="text" name="Phone" class="form-control search" placeholder="Search Phone...">
                                 </div>
 
                                 <div class="col-sm-3">
-                                    <input type="number" name="VendorName" class="form-control search" placeholder="Search Vendor Name...">
+                                    <input type="text" name="VendorName" class="form-control search" placeholder="Search Vendor Name...">
                                 </div>
 
                                 <div class="col-sm-3">
-                                    <input type="number" name="VendorPhone" class="form-control search" placeholder="Search Vendor Phone...">
+                                    <input type="text" name="VendorPhone" class="form-control search" placeholder="Search Vendor Phone...">
                                 </div>
 
                                 <button type="button" class="btn btn-sm btn-primary" style="margin-left: 13px;" data-toggle="modal" data-target="#addModal">
@@ -55,7 +55,7 @@
                             </form>
                         </div>
 
-                        <table class="table table-bordered" style="margin-top: 50px;" id="table">
+                        <table class="table table-responsive table-bordered" style="margin-top: 50px;" id="table">
                            <thead>
                             <tr>
                                 <th>Address</th>
@@ -126,19 +126,19 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Add Property</h5>
+          <h5 class="modal-title" id="exampleModalLongTitle">Edit Property</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
 
         <!-- Form edit PropertyData -->
-        <form id="addProperty" method="POST">
+        <form id="editProperty" method="POST">
             <div class="modal-body">
                 <div class="form-group">
                     <label for="">Address</label>
                     <input type="hidden" name="id" id="editID">
-                    <input type="text" name="Address" id="editAddress" class="form-control" required>
+                    <input type="text" name="Address" id="editAddress" class="form-control" required value="">
                 </div>
                 <div class="form-group">
                     <label for="">Phone</label>
@@ -173,6 +173,7 @@
     var table;
     var sorting = [];
     var add = [];
+    var edit = [];
 
     $(document).ready(function () {
         let url = $("#baseUrl").data("url");
@@ -220,20 +221,35 @@
             }
         });
 
+        //Edit Show
         $(document).on('click','.edit', function(e){
-
+            // evt.preventDefault();
             modal = $('#editModal');
             var id = $(this).data('id');
+
             $.ajax({
                 type: "POST",
                 url: url+'edit',
                 data: {'id' : id},
                 dataType: "json",
                 success: function (response) {
-
+                    $(document).find('#editID').val(response.data.ID);
+                    $(document).find('#editAddress').val(response.data.Address);
+                    $(document).find('#editFullAddress').val(response.data.AddressFull);
+                    $(document).find('#editPhone').val(response.data.Phone);
+                    $(document).find('#editVendorName').val(response.data.VendorName);
+                    $(document).find('#editVendorPhone').val(response.data.VendorPhone);
                 }
             });
+        });
 
+         //Edit Submit
+         $("#editProperty").submit(function(evt, ui){
+            evt.preventDefault();
+            // alert('masuk');
+            edit = $(this).serialize();
+            console.log(edit);
+            table.ajax.reload();
         });
 
         //DataTable
@@ -273,7 +289,8 @@
                     data : function(d){
                         d.filter_record = params,
                         d.sorting = sorting,
-                        d.add = add
+                        d.add = add,
+                        d.edit = edit
                     }
                     // "type" : "POST"
                 },
