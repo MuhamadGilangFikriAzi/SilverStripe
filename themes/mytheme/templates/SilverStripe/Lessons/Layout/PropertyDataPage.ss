@@ -10,25 +10,7 @@
 			<!-- BEGIN MAIN CONTENT -->
             <div class="main col-sm-10">
                 <div class="card">
-                    <!-- <div class="card-header">Input Product $test</div> -->
                     <div class="card-body">
-                        <!-- <form action="$BaseHref/product/store" method="post" class="mb-4">
-
-                            <div class="form-group">
-                                <label>Title</label>
-                                <input type="text" name="Title" class="form-control">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Number</label>
-                                <input type="number" name="Price" class="form-control">
-                            </div>
-
-                            <button type="reset" class="btn btn-danger">Reset</button>
-                            <button type="submit" class="btn btn-success">Submit</button>
-
-                        </form> -->
-
                         <div class="row" style="margin-top: 50px;">
                             <form id="search_field" method="POST">
                                 <div class="col-sm-3">
@@ -109,6 +91,15 @@
                     <label for="">Vendor Phone</label>
                     <input type="text" name="VendorPhone" class="form-control" required>
                 </div>
+                <div class="form-group">
+                    <label for="">Category</label>
+                    <select name="CategoryID" class="form-control" required>
+                        <option value="">-- Category --</option>
+                        <% loop $getCategory %>
+                            <option value="$ID">$Name</option>
+                        <% end_loop %>
+                    </select>
+                </div>
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -156,6 +147,15 @@
                     <label for="">Vendor Phone</label>
                     <input type="text" id="editVendorPhone" name="VendorPhone" class="form-control" required>
                 </div>
+                <div class="form-group">
+                    <label for="">Category</label>
+                    <select name="CategoryID" id="editCategoryID" class="form-control" required>
+                        <option value="">-- Category --</option>
+                        <% loop $getCategory %>
+                            <option value="$ID">$Name</option>
+                        <% end_loop %>
+                    </select>
+                </div>
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -177,7 +177,6 @@
 
     $(document).ready(function () {
         let url = $("#baseUrl").data("url");
-
         let param_asal = 1;
 
         //Search
@@ -188,7 +187,6 @@
 
             table.ajax.reload();
         });
-
 
         //Create
         $("#addProperty").submit(function(evt, ui)
@@ -239,6 +237,7 @@
                     $(document).find('#editPhone').val(response.data.Phone);
                     $(document).find('#editVendorName').val(response.data.VendorName);
                     $(document).find('#editVendorPhone').val(response.data.VendorPhone);
+                    $(document).find('#editCategoryID').val(response.data.CategoryID);
                 }
             });
         });
@@ -248,8 +247,8 @@
             evt.preventDefault();
             // alert('masuk');
             edit = $(this).serialize();
-            console.log(edit);
             table.ajax.reload();
+            alert('Data Has been updated');
         });
 
         //DataTable
@@ -304,6 +303,5 @@
                 "deferRender" : true,
         });
     });
-
 
 </script>

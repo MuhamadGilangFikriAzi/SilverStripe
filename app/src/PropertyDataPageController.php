@@ -2,7 +2,9 @@
 
 namespace SilverStripe\Lessons;
 
+use CategoryData;
 use PageController;
+use phpDocumentor\Reflection\Types\Parent_;
 use PropertyData;
 
 class PropertyDataPageController extends PageController{
@@ -10,6 +12,10 @@ class PropertyDataPageController extends PageController{
     private static $allowed_actions = [
         'getData','delete','edit'
     ];
+
+    function getCategory(){
+        return  CategoryData::get();
+    }
 
     public function getData(){
         $arr = array();
@@ -121,7 +127,8 @@ class PropertyDataPageController extends PageController{
                 'AddressFull' => $proprty->AddressFull,
                 'Phone' => $proprty->Phone,
                 'VendorName' => $proprty->VendorName,
-                'VendorPhone' => $proprty->VendorPhone
+                'VendorPhone' => $proprty->VendorPhone,
+                'CategoryID' => $proprty->CategoryID
             ]
         ];
 
@@ -136,6 +143,7 @@ class PropertyDataPageController extends PageController{
         $update->Phone = $data['Phone'];
         $update->VendorName = $data['VendorName'];
         $update->VendorPhone = $data['VendorPhone'];
+        $update->CategoryID = $data['CategoryID'];
         $update->write();
 
         return 'succes';
