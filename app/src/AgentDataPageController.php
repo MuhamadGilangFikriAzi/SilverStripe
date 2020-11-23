@@ -3,38 +3,24 @@
 namespace SilverStripe\Lessons;
 
 use AgentData;
-use CategoryData;
-use FacilityData;
 use PageController;
-use phpDocumentor\Reflection\Types\Parent_;
 use PropertyData;
-use SilverStripe\ORM\ArrayList;
 
-class PropertyDataPageController extends PageController{
+class AgentDataPageController extends PageController{
 
     private static $allowed_actions = [
-        'getData','delete','edit'
+        'getData','edit','delete'
     ];
 
-    function getCategory(){
-        return  CategoryData::get();
-    }
-
-    function getAgentData(){
-        return AgentData::get();
-    }
-
-    function getFacilityData(){
-        return FacilityData::get();
-
+    function getPropertyData(){
+        return PropertyData::get();
     }
 
     public function getData(){
         $arr = array();
         $count = 0;
-        $data = PropertyData::get();
-
-
+        $data = AgentData::get();
+        // print_r($data);die();
         $draw = isset($_REQUEST['draw']) ? $_REQUEST['draw'] : '';
         $start = isset($_REQUEST['start']) ? $_REQUEST['start'] : 0;
         $length = isset($_REQUEST['length']) ? $_REQUEST['length'] : 10;
@@ -47,6 +33,7 @@ class PropertyDataPageController extends PageController{
         if(!empty($create_array)){
             $this->store($create_array);
         }
+
 
          //Edit
          $edit = (isset($_REQUEST['edit'])) ? $_REQUEST['edit'] : '';
@@ -73,7 +60,7 @@ class PropertyDataPageController extends PageController{
         //End Filter
 
         //Sorting
-        $colomn = ['Address','Phone', 'VendorName', 'VendorPhone'];
+        $colomn = ['Name','Address', 'Phone'];
         $sorting_colomn = (isset($_REQUEST['order'][0]['column'])) ? $_REQUEST['order'][0]['column'] : 0;
         $sorting_type = (isset($_REQUEST['order'][0]['dir'])) ? $_REQUEST['order'][0]['dir'] : 'desc';
         $data = $data->sort($colomn[$sorting_colomn], $sorting_type);
@@ -87,10 +74,10 @@ class PropertyDataPageController extends PageController{
 
             $count += 1;
             $tempArray = array();
+            $tempArray[] = $value->Name;
             $tempArray[] = $value->Address;
             $tempArray[] = $value->Phone;
-            $tempArray[] = $value->VendorName;
-            $tempArray[] = $value->VendorPhone;
+            $tempArray[] = $value->PropertyData()->Address;
             $tempArray[] = "<button class='btn btn-info edit' data-ID='".$value->ID."' data-toggle='modal' data-target='#editModal'>edit</button> <button class='btn btn-danger delete' data-ID='".$value->ID."' >delete</button> ";
 
             $arr[] = $tempArray;
@@ -112,52 +99,31 @@ class PropertyDataPageController extends PageController{
 
     function store($data){
         //craete property
-        $create = PropertyData::create($data)->write();
-        $proprty = PropertyData::get()->byID($create);
-
-        //set data for facility and agent
-        $facility = $data['FacilityDataID'];
-
-        //craete many many realation facility
-        foreach ($facility as $key => $value) {
-            $facilityData = FacilityData::get()->byID($value);
-
-            $proprty->Facility()->add($facilityData);
-        }
+        AgentData::create($data)->write();
 
         return 'succes';
     }
 
 
     public function delete(){
-        $data = PropertyData::get()->byID($_POST['id']);
-        $data->deleteFacility($data->ID);
+        $data = AgentData::get()->byID($_POST['id']);
+
         $data->delete();
 
         return $this->getData();
     }
 
     public function edit(){
-        $proprty = PropertyData::get()->byID($_POST['id']);
-        $facility = $proprty->Facility();
-
-        $facilityData = array();
-        foreach ($facility as $key => $value) {
-            array_push($facilityData, $value->ID);
-        }
-
+        $agent = AgentData::get()->byID($_POST['id']);
         $result = [
             'message' => '',
             'status' => 200,
             'data' => [
-                'ID' => $proprty->ID,
-                'Address' => $proprty->Address,
-                'AddressFull' => $proprty->AddressFull,
-                'Phone' => $proprty->Phone,
-                'VendorName' => $proprty->VendorName,
-                'VendorPhone' => $proprty->VendorPhone,
-                'CategoryID' => $proprty->CategoryID,
-                'FacilityData' => $facilityData
+                'ID' => $agent->ID,
+                'Name' => $agent->Address,
+                'Address' => $agent->Address,
+                'Phone' => $agent->Phone,
+                'PropertyDataID' => $agent->PropertyDataID
             ]
         ];
 
@@ -165,25 +131,16 @@ class PropertyDataPageController extends PageController{
     }
 
     public function update($data){
-        $update = PropertyData::get()->byID($data['id']);
-        $update->deleteFacility($update->ID);
 
-        //Insert facility
-        foreach ($data['editFacilityDataID'] as $value) {
-            $facility = FacilityData::get()->byID($value);
+        $update = AgentData::get()->byID($data['ID']);
 
-            $update->Facility()->add($facility);
+        foreach ($data as $key => $value) {
+
+            $update->$key = $value;
         }
 
-        $update->Address = $data['Address'];
-        $update->AddressFull = $data['AddressFull'];
-        $update->Phone = $data['Phone'];
-        $update->VendorName = $data['VendorName'];
-        $update->VendorPhone = $data['VendorPhone'];
-        $update->CategoryID = $data['CategoryID'];
         $update->write();
 
         return 'succes';
     }
-
 }

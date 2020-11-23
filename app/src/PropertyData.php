@@ -61,7 +61,7 @@ class PropertyData extends DataObject{
         return $fields;
     }
 
-    function deleteRelation($id){
+    function deleteFacility($id){
         $query = DB::query("DELETE from FacilityData_PropertyData where PropertyDataID = ".$id." ");
 
         return $query;
