@@ -11,7 +11,8 @@ class AgentData extends DataObject{
     private static $db = [
         'Name' => 'Varchar(100)',
         'Address' => 'Text',
-        'Phone' => 'Varchar(20)'
+        'Phone' => 'Varchar(20)',
+        'Delete' => 'Int'
     ];
 
     private static $has_one = [

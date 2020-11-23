@@ -177,9 +177,17 @@
             evt.preventDefault();
             add = $(this).serialize();
 
-            table.ajax.reload();
-            alert('Data has been added');
-            $("#addAgent").trigger('reset');
+            $.ajax({
+                type: "post",
+                url: url+'store',
+                data: {'data' : add},
+                dataType: "json",
+                success: function (response) {
+                    table.ajax.reload();
+                    alert(response.message);
+                    $("#addAgent").trigger('reset');
+                }
+            });
         });
 
         //Delete
@@ -229,8 +237,18 @@
             evt.preventDefault();
             // alert('masuk');
             edit = $(this).serialize();
-            table.ajax.reload();
-            alert('Data Has been updated');
+
+            $.ajax({
+                type: "post",
+                url: url+'update',
+                data: {'data' : edit},
+                dataType: "json",
+                success: function (response) {
+                    table.ajax.reload();
+                    alert(response.message);
+                }
+            });
+
         });
 
         //DataTable
@@ -270,7 +288,6 @@
                     data : function(d){
                         d.filter_record = params,
                         d.sorting = sorting,
-                        d.add = add,
                         d.edit = edit
                     }
                 },

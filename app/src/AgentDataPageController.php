@@ -9,7 +9,7 @@ use PropertyData;
 class AgentDataPageController extends PageController{
 
     private static $allowed_actions = [
-        'getData','edit','delete'
+        'getData','edit','delete','store','update'
     ];
 
     function getPropertyData(){
@@ -19,31 +19,11 @@ class AgentDataPageController extends PageController{
     public function getData(){
         $arr = array();
         $count = 0;
-        $data = AgentData::get();
+        $data = AgentData::get()->where('"Delete" = 0');
         // print_r($data);die();
         $draw = isset($_REQUEST['draw']) ? $_REQUEST['draw'] : '';
         $start = isset($_REQUEST['start']) ? $_REQUEST['start'] : 0;
         $length = isset($_REQUEST['length']) ? $_REQUEST['length'] : 10;
-
-        //Add
-        $create = (isset($_REQUEST['add'])) ? $_REQUEST['add'] : '';
-        $create_array = [];
-
-        parse_str($create, $create_array);
-        if(!empty($create_array)){
-            $this->store($create_array);
-        }
-
-
-         //Edit
-         $edit = (isset($_REQUEST['edit'])) ? $_REQUEST['edit'] : '';
-         $edit_array = [];
-         parse_str($edit, $edit_array);
-
-         if(!empty($edit_array)){
-            $this->update($edit_array);
-         }
-         //End Filter
 
         //Filter
         $filter_record = (isset($_REQUEST['filter_record'])) ? $_REQUEST['filter_record'] : '';
@@ -97,18 +77,29 @@ class AgentDataPageController extends PageController{
         return json_encode($result);
     }
 
-    function store($data){
-        //craete property
-        AgentData::create($data)->write();
+    public function store(){
 
-        return 'succes';
+        $create = (isset($_REQUEST['data'])) ? $_REQUEST['data'] : '';
+        $create_array = [];
+
+        parse_str($create, $create_array);
+
+        AgentData::create($create_array)->write();
+
+        $data = [
+            'status' => 200,
+            'message' => 'Data has been added',
+            'data' => []
+        ];
+
+        return json_encode($data);
     }
 
 
     public function delete(){
         $data = AgentData::get()->byID($_POST['id']);
-
-        $data->delete();
+        $data->Delete = 1;
+        $data->write();
 
         return $this->getData();
     }
@@ -120,7 +111,7 @@ class AgentDataPageController extends PageController{
             'status' => 200,
             'data' => [
                 'ID' => $agent->ID,
-                'Name' => $agent->Address,
+                'Name' => $agent->Name,
                 'Address' => $agent->Address,
                 'Phone' => $agent->Phone,
                 'PropertyDataID' => $agent->PropertyDataID
@@ -132,15 +123,23 @@ class AgentDataPageController extends PageController{
 
     public function update($data){
 
-        $update = AgentData::get()->byID($data['ID']);
+        //Edit
+        $edit = (isset($_REQUEST['edit'])) ? $_REQUEST['edit'] : '';
+        $edit_array = [];
+        parse_str($edit, $edit_array);
 
-        foreach ($data as $key => $value) {
+        $update = AgentData::get()->byID($edit_array['ID']);
 
+        foreach ($edit_array as $key => $value) {
             $update->$key = $value;
         }
-
         $update->write();
 
-        return 'succes';
+        $data = [
+            'status' => 200,
+            'message' => 'Data Has been updated',
+            'data' => []
+        ];
+        return json_encode($data);
     }
 }
