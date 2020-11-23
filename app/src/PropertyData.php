@@ -1,17 +1,15 @@
 <?php
 
-use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
-use SilverStripe\AssetAdmin\Forms\UploadField;
-use SilverStripe\Assets\Image;
 use SilverStripe\Forms\CheckboxSetField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\SelectField;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\Queries\SQLDelete;
+use SilverStripe\ORM\Queries\SQLSelect;
 
 class PropertyData extends DataObject{
 
@@ -61,5 +59,11 @@ class PropertyData extends DataObject{
             FacilityData::get()->map('ID', 'Name')
         ));
         return $fields;
+    }
+
+    function deleteRelation($id){
+        $query = DB::query("DELETE from FacilityData_PropertyData where PropertyDataID = ".$id." ");
+
+        return $query;
     }
 }

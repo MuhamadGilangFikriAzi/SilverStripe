@@ -2,10 +2,13 @@
 
 namespace SilverStripe\Lessons;
 
+use AgentData;
 use CategoryData;
+use FacilityData;
 use PageController;
 use phpDocumentor\Reflection\Types\Parent_;
 use PropertyData;
+use SilverStripe\ORM\ArrayList;
 
 class PropertyDataPageController extends PageController{
 
@@ -15,6 +18,15 @@ class PropertyDataPageController extends PageController{
 
     function getCategory(){
         return  CategoryData::get();
+    }
+
+    function getAgentData(){
+        return AgentData::get();
+    }
+
+    function getFacilityData(){
+        return FacilityData::get();
+
     }
 
     public function getData(){
@@ -33,7 +45,7 @@ class PropertyDataPageController extends PageController{
 
         parse_str($create, $create_array);
         if(!empty($create_array)){
-            PropertyData::create($create_array)->write();
+            $this->store($create_array);
         }
 
          //Edit
@@ -52,20 +64,10 @@ class PropertyDataPageController extends PageController{
         parse_str($filter_record, $param_array);
 
         if(!empty($param_array)){
-            if($param_array['Address']){
-                $data = $data->where("Address LIKE '%".$param_array['Address']."%'");
-            }
-
-            if($param_array['Phone']){
-                $data = $data->where("Phone LIKE '%".$param_array['Phone']."%'");
-            }
-
-            if($param_array['VendorName']){
-                $data = $data->where("VendorName LIKE '%".$param_array['VendorName']."%'");
-            }
-
-            if($param_array['VendorPhone']){
-                $data = $data->where("VendorPhone LIKE '%".$param_array['VendorPhone']."%'");
+            foreach ($param_array as $key => $value) {
+                if($key){
+                    $data = $data->where("".$key." LIKE '%".$value."%'");
+                }
             }
         }
         //End Filter
@@ -82,7 +84,7 @@ class PropertyDataPageController extends PageController{
         $data = $data->limit($length, $start);
 
         foreach ($data as $value) {
-            // print_r($value);die();
+
             $count += 1;
             $tempArray = array();
             $tempArray[] = $value->Address;
@@ -108,8 +110,28 @@ class PropertyDataPageController extends PageController{
         return json_encode($result);
     }
 
+    function store($data){
+        //craete property
+        $create = PropertyData::create($data)->write();
+        $proprty = PropertyData::get()->byID($create);
+
+        //set data for facility and agent
+        $facility = $data['FacilityDataID'];
+
+        //craete many many realation facility
+        foreach ($facility as $key => $value) {
+            $facilityData = FacilityData::get()->byID($value);
+
+            $proprty->Facility()->add($facilityData);
+        }
+
+        return 'succes';
+    }
+
+
     public function delete(){
         $data = PropertyData::get()->byID($_POST['id']);
+
         $data->delete();
 
         return $this->getData();
@@ -117,6 +139,12 @@ class PropertyDataPageController extends PageController{
 
     public function edit(){
         $proprty = PropertyData::get()->byID($_POST['id']);
+        $facility = $proprty->Facility();
+
+        $facilityData = array();
+        foreach ($facility as $key => $value) {
+            array_push($facilityData, $value->ID);
+        }
 
         $result = [
             'message' => '',
@@ -128,7 +156,8 @@ class PropertyDataPageController extends PageController{
                 'Phone' => $proprty->Phone,
                 'VendorName' => $proprty->VendorName,
                 'VendorPhone' => $proprty->VendorPhone,
-                'CategoryID' => $proprty->CategoryID
+                'CategoryID' => $proprty->CategoryID,
+                'FacilityData' => $facilityData
             ]
         ];
 
@@ -136,8 +165,16 @@ class PropertyDataPageController extends PageController{
     }
 
     public function update($data){
-        // print_r($data);die();
         $update = PropertyData::get()->byID($data['id']);
+        $update->deleteRelation($update->ID);
+
+        //Insert facility
+        foreach ($data['editFacilityDataID'] as $value) {
+            $facility = FacilityData::get()->byID($value);
+
+            $update->Facility()->add($facility);
+        }
+
         $update->Address = $data['Address'];
         $update->AddressFull = $data['AddressFull'];
         $update->Phone = $data['Phone'];

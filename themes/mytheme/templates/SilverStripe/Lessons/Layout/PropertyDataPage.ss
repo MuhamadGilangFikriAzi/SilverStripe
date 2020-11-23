@@ -8,7 +8,7 @@
             <div id="baseUrl" data-url="{$BaseHref}property-data/"></div>
 
 			<!-- BEGIN MAIN CONTENT -->
-            <div class="main col-sm-10">
+            <div class="main col-sm">
                 <div class="card">
                     <div class="card-body">
                         <div class="row" style="margin-top: 50px;">
@@ -100,6 +100,20 @@
                         <% end_loop %>
                     </select>
                 </div>
+
+                <div class="form-group">
+                    <label for="">Facility</label>
+                    <div class="optionset checkboxset">
+                        <% loop getFacilityData %>
+                            <div class="checkbox form-check">
+                                <label class="form-check-label">
+                                    <input type="checkbox" name="FacilityDataID[]" class="form-check-input" value="$ID">
+                                    $Name
+                                </label>
+                            </div>
+                        <% end_loop %>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -156,6 +170,21 @@
                         <% end_loop %>
                     </select>
                 </div>
+
+                <div class="form-group">
+                    <label for="">Facility</label>
+                    <div class="optionset checkboxset">
+                        <% loop getFacilityData %>
+                            <div class="checkbox form-check">
+                                <label class="form-check-label">
+                                    <input type="checkbox" name="editFacilityDataID[]" class="form-check-input editFacilityDataID" id="contoh$ID" value="$ID">
+                                    $Name
+                                </label>
+                            </div>
+                        <% end_loop %>
+                    </div>
+                </div>
+
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -165,7 +194,7 @@
         <!-- End Form edit -->
       </div>
     </div>
-  </div>
+  </div>danger
 
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script>
@@ -200,7 +229,7 @@
         });
 
         //Delete
-        $(document).on('click','.btn-danger', function(e){
+        $(document).on('click','.delete', function(e){
             e.preventDefault();
 
             var result = confirm('are you realy to delete this');
@@ -238,7 +267,19 @@
                     $(document).find('#editVendorName').val(response.data.VendorName);
                     $(document).find('#editVendorPhone').val(response.data.VendorPhone);
                     $(document).find('#editCategoryID').val(response.data.CategoryID);
+
+                    let facilityData = response.data.FacilityData
+
+                    facilityData.forEach(element => {
+                        $('#contoh'+element).prop('checked', true);
+                    });
+
                 }
+            });
+
+            let facility = document.querySelectorAll('.editFacilityDataID');
+            facility.forEach(element => {
+                element.checked = false
             });
         });
 
