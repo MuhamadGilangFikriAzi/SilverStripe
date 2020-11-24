@@ -194,14 +194,13 @@
         <!-- End Form edit -->
       </div>
     </div>
-  </div>danger
+  </div>
 
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script>
     var params = [];
     var table;
     var sorting = [];
-    var add = [];
     var edit = [];
 
     $(document).ready(function () {
@@ -223,9 +222,18 @@
             evt.preventDefault();
             add = $(this).serialize();
 
-            table.ajax.reload();
-            alert('Data has been added');
-            $("#addProperty").trigger('reset');
+            $.ajax({
+                type: 'post',
+                url: url+'store',
+                data: {'data' : add},
+                dataType: "json",
+                success: function (response) {
+                    table.ajax.reload();
+                    alert(response.message);
+                    $("#addProperty").trigger('reset');
+                }
+            });
+
         });
 
         //Delete
@@ -329,7 +337,6 @@
                     data : function(d){
                         d.filter_record = params,
                         d.sorting = sorting,
-                        d.add = add,
                         d.edit = edit
                     }
                     // "type" : "POST"

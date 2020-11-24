@@ -13,7 +13,7 @@ use SilverStripe\ORM\ArrayList;
 class PropertyDataPageController extends PageController{
 
     private static $allowed_actions = [
-        'getData','delete','edit'
+        'getData','delete','edit','store'
     ];
 
     function getCategory(){
@@ -38,15 +38,6 @@ class PropertyDataPageController extends PageController{
         $draw = isset($_REQUEST['draw']) ? $_REQUEST['draw'] : '';
         $start = isset($_REQUEST['start']) ? $_REQUEST['start'] : 0;
         $length = isset($_REQUEST['length']) ? $_REQUEST['length'] : 10;
-
-        //Add
-        $create = (isset($_REQUEST['add'])) ? $_REQUEST['add'] : '';
-        $create_array = [];
-
-        parse_str($create, $create_array);
-        if(!empty($create_array)){
-            $this->store($create_array);
-        }
 
          //Edit
          $edit = (isset($_REQUEST['edit'])) ? $_REQUEST['edit'] : '';
@@ -110,22 +101,41 @@ class PropertyDataPageController extends PageController{
         return json_encode($result);
     }
 
-    function store($data){
+    function store(){
         //craete property
-        $create = PropertyData::create($data)->write();
-        $proprty = PropertyData::get()->byID($create);
+         //Add
+         $create = (isset($_REQUEST['data'])) ? $_REQUEST['data'] : '';
+         $data = [];
 
-        //set data for facility and agent
-        $facility = $data['FacilityDataID'];
+         parse_str($create, $data);
+         if(!empty($data)){
+            $create = PropertyData::create($data)->write();
+            $proprty = PropertyData::get()->byID($create);
 
-        //craete many many realation facility
-        foreach ($facility as $key => $value) {
-            $facilityData = FacilityData::get()->byID($value);
+            //set data for facility and agent
+            $facility = $data['FacilityDataID'];
 
-            $proprty->Facility()->add($facilityData);
-        }
+            //craete many many realation facility
+            foreach ($facility as $key => $value) {
+                $facilityData = FacilityData::get()->byID($value);
 
-        return 'succes';
+                $proprty->Facility()->add($facilityData);
+            }
+
+            $message = 'Data has been added';
+            $status = 200;
+         }else {
+            $message = 'data failed to add';
+            $status = 404;
+         }
+
+         $data = [
+            'message' => $message,
+            'status' => $status,
+            'data' => []
+         ];
+
+        return json_encode($data);
     }
 
 
