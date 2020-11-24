@@ -39,16 +39,6 @@ class PropertyDataPageController extends PageController{
         $start = isset($_REQUEST['start']) ? $_REQUEST['start'] : 0;
         $length = isset($_REQUEST['length']) ? $_REQUEST['length'] : 10;
 
-         //Edit
-         $edit = (isset($_REQUEST['edit'])) ? $_REQUEST['edit'] : '';
-         $edit_array = [];
-         parse_str($edit, $edit_array);
-
-         if(!empty($edit_array)){
-            $this->update($edit_array);
-         }
-         //End Filter
-
         //Filter
         $filter_record = (isset($_REQUEST['filter_record'])) ? $_REQUEST['filter_record'] : '';
         $param_array = [];
@@ -175,25 +165,45 @@ class PropertyDataPageController extends PageController{
     }
 
     public function update($data){
-        $update = PropertyData::get()->byID($data['id']);
-        $update->deleteFacility($update->ID);
 
-        //Insert facility
-        foreach ($data['editFacilityDataID'] as $value) {
-            $facility = FacilityData::get()->byID($value);
+        //Edit
+        $edit = (isset($_REQUEST['data'])) ? $_REQUEST['data'] : '';
+        $data = [];
+        parse_str($edit, $data);
 
-            $update->Facility()->add($facility);
+        if(!empty($data)){
+            $update = PropertyData::get()->byID($data['id']);
+            $update->deleteFacility($update->ID);
+
+            //Insert facility
+            foreach ($data['editFacilityDataID'] as $value) {
+                $facility = FacilityData::get()->byID($value);
+
+                $update->Facility()->add($facility);
+            }
+
+            $update->Address = $data['Address'];
+            $update->AddressFull = $data['AddressFull'];
+            $update->Phone = $data['Phone'];
+            $update->VendorName = $data['VendorName'];
+            $update->VendorPhone = $data['VendorPhone'];
+            $update->CategoryID = $data['CategoryID'];
+            $update->write();
+
+            $message = 'Data has been updated';
+            $status = 200;
+        }else{
+            $message = 'Data failed to add';
+            $status = 404;
         }
 
-        $update->Address = $data['Address'];
-        $update->AddressFull = $data['AddressFull'];
-        $update->Phone = $data['Phone'];
-        $update->VendorName = $data['VendorName'];
-        $update->VendorPhone = $data['VendorPhone'];
-        $update->CategoryID = $data['CategoryID'];
-        $update->write();
+        $data = [
+            'message' => $message,
+            'status' => $status,
+            'data' => []
+        ];
 
-        return 'succes';
+        return json_encode($data);
     }
 
 }

@@ -201,7 +201,6 @@
     var params = [];
     var table;
     var sorting = [];
-    var edit = [];
 
     $(document).ready(function () {
         let url = $("#baseUrl").data("url");
@@ -282,6 +281,24 @@
                         $('#contoh'+element).prop('checked', true);
                     });
 
+                    //Edit Submit
+                    $("#editProperty").submit(function(evt, ui){
+                        evt.preventDefault();
+                        edit = $(this).serialize();
+
+                        $.ajax({
+                            type: "post",
+                            url: url+'update',
+                            data: {'data' : edit},
+                            dataType: "json",
+                            success: function (data) {
+                                table.ajax.reload();
+                                alert(data.message);
+                            }
+                        });
+
+                    });
+
                 }
             });
 
@@ -289,15 +306,6 @@
             facility.forEach(element => {
                 element.checked = false
             });
-        });
-
-         //Edit Submit
-         $("#editProperty").submit(function(evt, ui){
-            evt.preventDefault();
-            // alert('masuk');
-            edit = $(this).serialize();
-            table.ajax.reload();
-            alert('Data Has been updated');
         });
 
         //DataTable
@@ -336,8 +344,7 @@
                     "url" : url+"getData",
                     data : function(d){
                         d.filter_record = params,
-                        d.sorting = sorting,
-                        d.edit = edit
+                        d.sorting = sorting
                     }
                     // "type" : "POST"
                 },
