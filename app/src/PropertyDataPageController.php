@@ -98,6 +98,7 @@ class PropertyDataPageController extends PageController{
          $data = [];
 
          parse_str($create, $data);
+        print_r($data);die();
          if(!empty($data)){
             $create = PropertyData::create($data)->write();
             $proprty = PropertyData::get()->byID($create);
@@ -193,7 +194,7 @@ class PropertyDataPageController extends PageController{
             $message = 'Data has been updated';
             $status = 200;
         }else{
-            $message = 'Data failed to add';
+            $message = 'Data failed to edit';
             $status = 404;
         }
 
@@ -204,6 +205,7 @@ class PropertyDataPageController extends PageController{
         ];
 
         return json_encode($data);
+
     }
 
 }

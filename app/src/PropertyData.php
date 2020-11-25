@@ -39,6 +39,12 @@ class PropertyData extends DataObject{
         'VendorName' => "Vendor Name"
     ];
 
+    private static $searchable_fields = [
+        'Address',
+        'Phone',
+        'VendorName'
+    ];
+
     public function getCMSFields()
     {
         $fields = FieldList::create(TabSet::create('Root'));
@@ -66,4 +72,5 @@ class PropertyData extends DataObject{
 
         return $query;
     }
+
 }

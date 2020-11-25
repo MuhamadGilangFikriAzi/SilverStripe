@@ -66,7 +66,7 @@
         </div>
 
         <!-- Form Add PropertyData -->
-        <form id="addAgent" method="POST">
+        <form id="addAgent" method="POST" enctype="multipart/form-data">
             <div class="modal-body">
                 <div class="form-group">
                     <label for="">Name</label>
@@ -88,6 +88,11 @@
                             <option value="$ID">$Address</option>
                         <% end_loop %>
                     </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="photo">Photo</label>
+                    <input type="file" name="Photo" class="form-control form-control-file" id="addPhoto">
                 </div>
 
             </div>
@@ -114,7 +119,7 @@
         </div>
 
         <!-- Form edit Agent -->
-        <form id="editAgent" method="POST">
+        <form id="editAgent" method="POST" enctype="multipart/form-data">
             <div class="modal-body">
                 <div class="form-group">
                     <label for="">Name</label>
@@ -174,14 +179,35 @@
         //Create
         $("#addAgent").submit(function(evt, ui)
         {
+            // var from = document.getElementById('addAgent');
+            // var formData = new FormData(form);
+
+            // formData.append('file',file);
+
+            // var xhr = new XMLHttpRequest();
+            // // Add any event handlers here...
+            // xhr.open('POST', form.getAttribute('action'), true);
+            // xhr.send(formData);
+
             evt.preventDefault();
             add = $(this).serialize();
+
+            var photo = $('#addPhoto');
+            let file = photo[0].files[0];
+
+            let form = {
+                'data' : add,
+                'file' : file
+            };
 
             $.ajax({
                 type: "post",
                 url: url+'store',
-                data: {'data' : add},
-                dataType: "json",
+                data: new FormData(this),
+                dataType: "html",
+                processData: false,
+                contentType: false,
+                enctype: 'multipart/form-data',
                 success: function (response) {
                     table.ajax.reload();
                     alert(response.message);

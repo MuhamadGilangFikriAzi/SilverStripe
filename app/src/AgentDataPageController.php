@@ -12,6 +12,24 @@ class AgentDataPageController extends PageController{
         'getData','edit','delete','store','update'
     ];
 
+    private function getUploadImagesFieldGroup() {
+		$imageUploadField = new UploadField('UploadedImages', 'Upload Images');
+		$imageUploadField->setCanAttachExisting(false);
+		$imageUploadField->setCanPreviewFolder(false);
+		$imageUploadField->relationAutoSetting = false;
+		$imageUploadField->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif','tiff'));
+		$imageUploadField->setFolderName('images/tmp-upload-images');
+		$imageUploadField->setTemplateFileButtons('UploadField_FileButtons_ORS');
+
+		$fg = new FieldGroup(
+			$imageUploadField
+		);
+		$fg->addExtraClass('upload ss-upload ss-uploadfield');	  // had to add these classes because UploadField is added to FieldGroup
+		$fg->setName('UploadImagesFieldGroup');
+
+		return $fg;
+	}
+
     function getPropertyData(){
         return PropertyData::get();
     }
@@ -78,12 +96,12 @@ class AgentDataPageController extends PageController{
     }
 
     public function store(){
-
         $create = (isset($_REQUEST['data'])) ? $_REQUEST['data'] : '';
         $create_array = [];
-
+        $file = $_FILES['Photo'];
+        // print_r($_FILES['Photo']);die();
         parse_str($create, $create_array);
-
+        print_r($create_array);die();
         AgentData::create($create_array)->write();
 
         $data = [
