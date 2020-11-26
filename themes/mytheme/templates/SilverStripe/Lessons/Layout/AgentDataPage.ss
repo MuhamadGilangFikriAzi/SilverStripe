@@ -92,7 +92,7 @@
 
                 <div class="form-group">
                     <label for="photo">Photo</label>
-                    <input type="file" name="Photo" class="form-control form-control-file" id="addPhoto">
+                    <input type="file" name="file" class="form-control form-control-file" id="addPhoto">
                 </div>
 
             </div>
@@ -190,21 +190,21 @@
             // xhr.send(formData);
 
             evt.preventDefault();
-            add = $(this).serialize();
+            // add = $(this).serialize();
 
-            var photo = $('#addPhoto');
-            let file = photo[0].files[0];
+            // var photo = $('#addPhoto');
+            // let file = photo[0].files[0];
 
-            let form = {
-                'data' : add,
-                'file' : file
-            };
+            // let form = {
+            //     'data' : add,
+            //     'file' : file
+            // };
 
             $.ajax({
                 type: "post",
                 url: url+'store',
                 data: new FormData(this),
-                dataType: "html",
+                dataType: "json",
                 processData: false,
                 contentType: false,
                 enctype: 'multipart/form-data',

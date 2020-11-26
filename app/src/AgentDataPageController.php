@@ -5,11 +5,13 @@ namespace SilverStripe\Lessons;
 use AgentData;
 use PageController;
 use PropertyData;
+use SilverStripe\Assets\File;
+use SilverStripe\Assets\Upload;
 
 class AgentDataPageController extends PageController{
 
     private static $allowed_actions = [
-        'getData','edit','delete','store','update'
+        'getData','edit','delete','store','update','uploadFile'
     ];
 
     private function getUploadImagesFieldGroup() {
@@ -96,13 +98,10 @@ class AgentDataPageController extends PageController{
     }
 
     public function store(){
-        $create = (isset($_REQUEST['data'])) ? $_REQUEST['data'] : '';
-        $create_array = [];
-        $file = $_FILES['Photo'];
-        // print_r($_FILES['Photo']);die();
-        parse_str($create, $create_array);
-        print_r($create_array);die();
-        AgentData::create($create_array)->write();
+        $create = $_REQUEST;
+        $fileID['FileID'] = $this->uploadFile();
+        $dataCreate = array_merge($create, $fileID);
+        AgentData::create($dataCreate)->write();
 
         $data = [
             'status' => 200,
@@ -159,5 +158,15 @@ class AgentDataPageController extends PageController{
             'data' => []
         ];
         return json_encode($data);
+    }
+
+    public function uploadFile(){
+        $upload = new Upload();
+        $file = new File();
+        $tanggal = date('d-m-Y');
+        $upload->loadIntoFile($_FILES['file'], $file, 'File/'.$tanggal);
+        $file->write();
+
+        return $file->ID;
     }
 }

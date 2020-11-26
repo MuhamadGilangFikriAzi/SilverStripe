@@ -1,5 +1,7 @@
 <?php
 
+use Embed\Adapters\File;
+use SilverStripe\Assets\File as AssetsFile;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\TextareaField;
@@ -16,7 +18,8 @@ class AgentData extends DataObject{
     ];
 
     private static $has_one = [
-        'PropertyData' => PropertyData::class
+        'PropertyData' => PropertyData::class,
+        'File' => AssetsFile::class
     ];
 
     private static $summary_fields = [
