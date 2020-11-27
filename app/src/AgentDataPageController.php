@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Lessons;
 
+use SilverStripe\Assets\Image;
 use AgentData;
 use PageController;
 use PropertyData;
@@ -11,7 +12,7 @@ use SilverStripe\Assets\Upload;
 class AgentDataPageController extends PageController{
 
     private static $allowed_actions = [
-        'getData','edit','delete','store','update','uploadFile'
+        'getData','edit','delete','store','update','dropZone'
     ];
 
     private function getUploadImagesFieldGroup() {
@@ -78,7 +79,7 @@ class AgentDataPageController extends PageController{
             $tempArray[] = $value->Address;
             $tempArray[] = $value->Phone;
             $tempArray[] = $value->PropertyData()->Address;
-            $tempArray[] = "<button class='btn btn-info edit' data-ID='".$value->ID."' data-toggle='modal' data-target='#editModal'>edit</button> <button class='btn btn-danger delete' data-ID='".$value->ID."' >delete</button> ";
+            $tempArray[] = "<button class='btn btn-info edit' data-ID='".$value->ID."' data-toggle='modal' data-target='#editModal'>edit</button> <button class='btn btn-danger delete' data-ID='".$value->ID."' >delete</button> <button class='btn btn-warning image' type='button' data-ID='".$value->ID."' data-toggle='modal' data-target='#uploadModal' title='upload Images' >upload</button> ";
 
             $arr[] = $tempArray;
         }
@@ -98,6 +99,9 @@ class AgentDataPageController extends PageController{
     }
 
     public function store(){
+
+        print_r($_REQUEST);
+        print_r($_FILES);
         $create = $_REQUEST;
         $fileID['FileID'] = $this->uploadFile();
         $dataCreate = array_merge($create, $fileID);
@@ -112,6 +116,33 @@ class AgentDataPageController extends PageController{
         return json_encode($data);
     }
 
+    public function dropZone(){
+
+        $id = $_REQUEST['ID'];
+
+        $agent = AgentData::get_by_id($id);
+
+        // $image = Image::get_by_id();
+        $test = $this->uploadFile();
+        print_r($image);die($test);
+        // $agent->Images()->add($image);
+
+        print_r($agent->Images());die();
+
+        print_r($_REQUEST);
+        print_r($_FILES);die();
+    }
+
+    private function uploadFile(){
+        $upload = new Upload();
+        $file = new File();
+        $tanggal = date('d-m-Y');
+        $upload->loadIntoFile($_FILES['file'], $file, 'File/'.$tanggal);
+        $file->write();
+
+        return $file->ID;
+    }
+
 
     public function delete(){
         $data = AgentData::get()->byID($_POST['id']);
@@ -123,6 +154,7 @@ class AgentDataPageController extends PageController{
 
     public function edit(){
         $agent = AgentData::get()->byID($_POST['id']);
+
         $result = [
             'message' => '',
             'status' => 200,
@@ -131,25 +163,30 @@ class AgentDataPageController extends PageController{
                 'Name' => $agent->Name,
                 'Address' => $agent->Address,
                 'Phone' => $agent->Phone,
-                'PropertyDataID' => $agent->PropertyDataID
+                'PropertyDataID' => $agent->PropertyDataID,
+                'File' => [
+                    'URL' => $agent->File->URL,
+                    'Name' => $agent->File->Name
+                    ]
             ]
         ];
 
         return json_encode($result);
     }
 
-    public function update($data){
+    public function update(){
 
-        //Edit
-        $edit = (isset($_REQUEST['edit'])) ? $_REQUEST['edit'] : '';
-        $edit_array = [];
-        parse_str($edit, $edit_array);
+        $edit = $_REQUEST;
+        $update = AgentData::get()->byID($edit['ID']);
 
-        $update = AgentData::get()->byID($edit_array['ID']);
-
-        foreach ($edit_array as $key => $value) {
+        foreach ($edit as $key => $value) {
             $update->$key = $value;
         }
+
+        if(isset($_FILES['file']['name'])){
+            $update->FileID = $this->uploadFile();
+        }
+
         $update->write();
 
         $data = [
@@ -160,13 +197,4 @@ class AgentDataPageController extends PageController{
         return json_encode($data);
     }
 
-    public function uploadFile(){
-        $upload = new Upload();
-        $file = new File();
-        $tanggal = date('d-m-Y');
-        $upload->loadIntoFile($_FILES['file'], $file, 'File/'.$tanggal);
-        $file->write();
-
-        return $file->ID;
-    }
 }

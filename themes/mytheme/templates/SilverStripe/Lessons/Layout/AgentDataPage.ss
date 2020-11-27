@@ -1,6 +1,3 @@
-
-
-<!-- BEGIN CONTENT WRAPPER -->
 <div class="content">
     $Content
 	<div class="container">
@@ -30,7 +27,7 @@
                                     Add
                                 </button>
                                 <button style="float: right; margin-right: 17px;" type="submit" class="btn btn-primary">Search</button>
-
+                                <!-- <button type="button" class="btn btn-primary" id="test"></button> -->
                             </form>
                         </div>
 
@@ -66,8 +63,9 @@
         </div>
 
         <!-- Form Add PropertyData -->
-        <form id="addAgent" method="POST" enctype="multipart/form-data">
+        <form id="addAgent" method="POST" name="form1" enctype="multipart/form-data">
             <div class="modal-body">
+
                 <div class="form-group">
                     <label for="">Name</label>
                     <input type="text" name="Name" class="form-control" required>
@@ -80,6 +78,11 @@
                     <label for="">Phone</label>
                     <input type="text" name="Phone" class="form-control" required>
                 </div>
+
+                <div class="form-group">
+                    <label for="">Price</label>
+                    <input type="text" name="price" class="form-control" id="price">
+                </div>
                 <div class="form-group">
                     <label for="">PropertyData</label>
                     <select name="PropertyDataID" class="form-control" required>
@@ -91,7 +94,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="photo">Photo</label>
+                    <label for="photo">File</label>
                     <input type="file" name="file" class="form-control form-control-file" id="addPhoto">
                 </div>
 
@@ -100,12 +103,13 @@
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary">Create</button>
             </div>
+
         </form>
         <!-- End Form Add -->
+
       </div>
     </div>
   </div>
-
 
    <!-- Modal Edit-->
    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -143,29 +147,78 @@
                         <% end_loop %>
                     </select>
                 </div>
+                < class="form-group">
+                    <label for="file">File</label>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <a href="#" target="_blank" class="btn btn-warning btn-block" id="downloadFile"><i class="fa fa-download"></i> Download File <span id="nameFile"></span></a>
+                            </div>
+                        </div>
 
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Create</button>
-            </div>
-        </form>
+                        </div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+
+            </form>
         <!-- End Form edit -->
+
+        <!-- form dropzone -->
+        <!-- <form action="{$BaseHref}agent-data-page/dropZone" class="dropzone" name="fomr2" id="dropZone">
+            <div class="dz-default dz-message">
+                <h3 class="sbold">Drop files here to upload</h3>
+                <span>You can also click to open file browser</span>
+            </div>
+        </form> -->
       </div>
     </div>
   </div>
 
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+  <!-- Modal upload-->
+  <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">upload Property</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!-- form dropzone -->
+        <form action="{$BaseHref}agent-data-page/dropZone" onchange="dropZone()" class="dropzone" name="fomr2" id="dropZone" method="GET">
+            <input type="hidden" id="hiddenID" name="ID" value="tets">
+            <div class="dz-default dz-message">
+                <h3 class="sbold">Drop files here to upload</h3>
+                <span>You can also click to open file browser</span>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+<!-- $ThemeDir.debug -->
+  <script src="$ThemeDir/javascript/common/autoNumeric.js"></script>
 <script>
     var params = [];
     var table;
     var sorting = [];
-    var add = [];
-    var edit = [];
+
+    // Dropzone.autoDiscover = false;
 
     $(document).ready(function () {
+
+        const formatCur = {mDec:0, aSep:'.', aDec:','};
+
+        $('#price').autoNumeric('init', formatCur);
+
         let url = $("#baseUrl").data("url");
         let param_asal = 1;
+
+        // dropZone
+        $(document).on('click','.image', function(e){
+            var id = $(this).data('id');
+
+            $(document).find('#hiddenID').val(id);
+        });
 
         //Search
         $("#search_field").submit(function(evt, ui)
@@ -179,27 +232,7 @@
         //Create
         $("#addAgent").submit(function(evt, ui)
         {
-            // var from = document.getElementById('addAgent');
-            // var formData = new FormData(form);
-
-            // formData.append('file',file);
-
-            // var xhr = new XMLHttpRequest();
-            // // Add any event handlers here...
-            // xhr.open('POST', form.getAttribute('action'), true);
-            // xhr.send(formData);
-
             evt.preventDefault();
-            // add = $(this).serialize();
-
-            // var photo = $('#addPhoto');
-            // let file = photo[0].files[0];
-
-            // let form = {
-            //     'data' : add,
-            //     'file' : file
-            // };
-
             $.ajax({
                 type: "post",
                 url: url+'store',
@@ -236,6 +269,7 @@
             }
         });
 
+
         //Edit Show
         $(document).on('click','.edit', function(e){
             // evt.preventDefault();
@@ -248,12 +282,15 @@
                 data: {'id' : id},
                 dataType: "json",
                 success: function (response) {
+                    $("#editFile").val('');
 
                     $(document).find('#editID').val(response.data.ID);
                     $(document).find('#editName').val(response.data.Name);
                     $(document).find('#editAddress').val(response.data.Address);
                     $(document).find('#editPhone').val(response.data.Phone);
                     $(document).find('#editPropertyDataID').val(response.data.PropertyDataID);
+                    $(document).find('#downloadFile').attr('href', response.data.File.URL);
+                    $(document).find('#nameFile').html(response.data.File.Name);
                 }
             });
         });
@@ -267,8 +304,11 @@
             $.ajax({
                 type: "post",
                 url: url+'update',
-                data: {'data' : edit},
+                data: new FormData(this),
                 dataType: "json",
+                processData: false,
+                contentType: false,
+                enctype: 'multipart/form-data',
                 success: function (response) {
                     table.ajax.reload();
                     alert(response.message);
@@ -313,8 +353,7 @@
                     "url" : url+"getData",
                     data : function(d){
                         d.filter_record = params,
-                        d.sorting = sorting,
-                        d.edit = edit
+                        d.sorting = sorting
                     }
                 },
 
@@ -327,5 +366,33 @@
                 "deferRender" : true,
         });
     });
+
+    function dropZone(id){
+        $('#dropArea').dropzone({
+            url:url+'dropZone?ID='+id,
+            maxFiles:   1,
+            uploadMultiple: false,
+            autoProcessQueue:false,
+            addRemoveLinks: true,
+            init: function(){
+                dzClosure = this;
+
+                $('#addAgent').submit(function(e) {
+                    dzClosure.processQueue(); /* My button isn't a submit */
+                });
+
+                // My project only has 1 file hence not sendingmultiple
+                dzClosure.on('sending', function(data, xhr, formData) {
+                    $('#addAgent input[type="text"],#addAgent textarea').each(function(){
+                        formData.append($(this).attr('name'),$(this).val());
+                    })
+                });
+
+                dzClosure.on('complete',function(){
+                    window.location.href = url+'dropZone';
+                })
+            },
+        });
+    }
 
 </script>

@@ -96,6 +96,8 @@
 			</div>
 			<!-- END COPYRIGHT -->
 
-		</footer>
+        </footer>
 
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="$ThemeDir/javascript/dropzone-5.7.0/dist/dropzone.js"></script>
 		<!-- END FOOTER -->

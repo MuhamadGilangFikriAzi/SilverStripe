@@ -38,6 +38,8 @@ namespace {
             Requirements::javascript('javascript/common/bootstrap-checkbox.js');
             Requirements::javascript('javascript/common/nice-scroll.js');
             Requirements::javascript('javascript/common/jquery-browser.js');
+            Requirements::javascript('javascript/common/autoNumeric.js');
+            // Requirements::javascript('javascript/dropzone-5.7.0/dist/dropzone.js');
             // Requirements::javascript('javascript/scripts.js');
         }
     }

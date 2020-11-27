@@ -24,20 +24,26 @@ $MetaTags(false)
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
-	<% require themedCSS('reset') %>
+	<!-- <% require themedCSS('reset') %>
 	<% require themedCSS('typography') %>
 	<% require themedCSS('form') %>
-	<% require themedCSS('layout') %>
+	<% require themedCSS('layout') %> -->
     <link rel="shortcut icon" href="themes/simple/images/favicon.ico" />
     <!-- <% require javascript('//code.jquery.com/jquery-3.3.1.min.js') %> -->
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css"/>
+    <link rel="stylesheet" href="$ThemeDir/javascript/dropzone-5.7.0/dist/basic.css">
+    <link rel="stylesheet" href="$ThemeDir/javascript/dropzone-5.7.0/dist/dropzone.css">
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.js" integrity="sha256-DrT5NfxfbHvMHux31Lkhxg42LY6of8TaYyK50jnxRnM=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="$ThemeDir/javascript/dropzone-5.7.0/dist/dropzone.css">
 
     <!-- <link rel="stylesheet" type="text/css" href="/public/DataTables-1.10.22/css/jquery.dataTables.min.css"/>
 
-    <script type="text/javascript" src="/public/DataTables-1.10.22/js/jquery.dataTables.min.js"></script> -->
+        <script type="text/javascript" src="/public/DataTables-1.10.22/js/jquery.dataTables.min.js"></script> -->
+
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+        <script src="$ThemeDir/javascript/dropzone-5.7.0/dist/dropzone.js"></script>
 
 </head>
 <body class="$ClassName.ShortName<% if not $Menu(2) %> no-sidebar<% end_if %>" <% if $i18nScriptDirection %>dir="$i18nScriptDirection"<% end_if %>>
@@ -53,6 +59,7 @@ $MetaTags(false)
 <% require themedJavascript('script') %>
 
 </body>
+
 </html>
 
 

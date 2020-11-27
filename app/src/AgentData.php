@@ -1,5 +1,6 @@
 <?php
 
+use SilverStripe\Assets\Image;
 use Embed\Adapters\File;
 use SilverStripe\Assets\File as AssetsFile;
 use SilverStripe\Forms\FieldList;
@@ -20,6 +21,10 @@ class AgentData extends DataObject{
     private static $has_one = [
         'PropertyData' => PropertyData::class,
         'File' => AssetsFile::class
+    ];
+
+    private static $has_many = [
+        'Images' => Image::class
     ];
 
     private static $summary_fields = [
