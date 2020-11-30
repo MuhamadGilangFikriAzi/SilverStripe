@@ -356,7 +356,7 @@
                             </div>
                         </div>
 
-                        <input type="file" name="Photo" id="" class="form-control">
+                        <input type="file" name="Photo" id="edit_image" class="form-control">
 
                 </div>
                 <div class="modal-footer">
@@ -503,6 +503,8 @@
                     imageModal.forEach(element => {
                         element.src = data.data.FileURL;
                     });
+
+                    $('#edit_image').val('');
 
                     table.ajax.reload();
                     alert(data.message);
