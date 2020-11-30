@@ -4,6 +4,7 @@ namespace SilverStripe\Lessons;
 
 use SilverStripe\Assets\Image;
 use AgentData;
+use AgentDataGallery;
 use PageController;
 use PropertyData;
 use SilverStripe\Assets\File;
@@ -120,12 +121,7 @@ class AgentDataPageController extends PageController{
 
         $id = $_REQUEST['ID'];
 
-        $agent = AgentData::get_by_id($id);
-
-        // $image = Image::get_by_id();
-        $image = $this->uploadFile();
-        // print_r($test);die();
-        $agent->Images()->add($image);
+        $this->uploadDropzone($id);
 
         $data = [
             'status' => 200,
@@ -134,6 +130,22 @@ class AgentDataPageController extends PageController{
         ];
 
         return json_encode($data);
+    }
+
+    private function uploadDropzone($id){
+
+        $fileName = $_FILES['file']['name'];
+        $fileID = $this->uploadFile();
+
+        $data = [
+            'Name' => $fileName,
+            'FileID' => $fileID,
+            'AgentDataID' => $id
+        ];
+
+        $create = AgentDataGallery::create($data)->write();
+
+        return $create;
     }
 
     private function uploadFile(){

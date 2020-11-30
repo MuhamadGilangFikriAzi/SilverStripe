@@ -218,6 +218,7 @@
             var id = $(this).data('id');
 
             $(document).find('#hiddenID').val(id);
+            $('#dropZone').trigger('reset');
         });
 
         //Search

@@ -25,13 +25,17 @@ class AgentData extends DataObject{
     ];
 
     private static $has_many = [
-        'Images' => Image::class
+        'AgentDataGallery' => AgentDataGallery::class
     ];
 
     private static $summary_fields = [
         'Name',
         'Address',
         'Phone'
+    ];
+
+    private static $owns = [
+        'AgentDataGallery'
     ];
 
     public function getCMSFields()
