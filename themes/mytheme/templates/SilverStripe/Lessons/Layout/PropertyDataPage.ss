@@ -73,6 +73,7 @@
                         >
                             <thead>
                                 <tr>
+                                    <th>Foto</th>
                                     <th>Address</th>
                                     <th>Phone</th>
                                     <th>Vendor Name</th>

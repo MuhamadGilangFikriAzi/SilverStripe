@@ -67,9 +67,30 @@ class PropertyDataPageController extends PageController{
         $data = $data->limit($length, $start);
 
         foreach ($data as $value) {
+            $fileURL = '0';
+            if($value->ImageID != 0){
+                $image = File::get_by_id($value->ImageID);
+                $fileURL = $image->getAbsoluteURL();
+            }
 
             $count += 1;
             $tempArray = array();
+            $tempArray[] = "<img src='".$fileURL."' alt='...' class='img-thumbnail'  data-toggle='modal' data-target='#image".$value->ID."' style='width: 150px; height: 150px;'>
+            <div class='modal fade' id='image".$value->ID."' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>
+                <div class='modal-dialog' role='document'>
+                    <div class='modal-content'>
+                        <div class='modal-header'>
+                            <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                                <span aria-hidden='true'>&times;</span>
+                            </button>
+                            </div>
+                            <div class='modal-body'>
+                                <img src='".$fileURL."' alt='...' class='img-thumbnail' style='width: 600px; height: 600px;'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>";
             $tempArray[] = $value->Address;
             $tempArray[] = $value->Phone;
             $tempArray[] = $value->VendorName;
