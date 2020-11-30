@@ -1,5 +1,6 @@
 <?php
 
+use SilverStripe\Assets\Image;
 use SilverStripe\Forms\CheckboxSetField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
@@ -22,7 +23,8 @@ class PropertyData extends DataObject{
     ];
 
     private static $has_one = [
-        'Category' => CategoryData::class
+        'Category' => CategoryData::class,
+        'Image' => Image::class
     ];
 
     private static $has_many = [
@@ -37,6 +39,10 @@ class PropertyData extends DataObject{
         'Address' => "Address",
         'Phone' => "Phone number",
         'VendorName' => "Vendor Name"
+    ];
+
+    private static $owns = [
+        'Image'
     ];
 
     private static $searchable_fields = [

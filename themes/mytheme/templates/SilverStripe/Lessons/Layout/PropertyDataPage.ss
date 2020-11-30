@@ -335,6 +335,29 @@
                             <% end_loop %>
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label for="">Image</label>
+                        <div class=""></div>
+                        <img src="" alt="..." class="img-thumbnail img_edit"  data-toggle="modal" data-target="#imageEdit" style="width: 300px; height: 300px;">
+                        <div class="modal fade" id="imageEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <img src="" alt="..." class="img-thumbnail img_edit" style="width: 600px; height: 600px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="file" name="Photo" id="" class="form-control">
+
                 </div>
                 <div class="modal-footer">
                     <button
@@ -378,18 +401,20 @@
         //Create
         $("#addProperty").submit(function (evt, ui) {
             evt.preventDefault();
-            add = $(this).serialize();
-            console.log(add);
+
             $.ajax({
                 type: "post",
-                url: url + "store",
-                data: { data: add },
+                url: url+'store',
+                data: new FormData(this),
                 dataType: "json",
+                processData: false,
+                contentType: false,
+                enctype: 'multipart/form-data',
                 success: function (response) {
                     table.ajax.reload();
                     alert(response.message);
-                    $("#addProperty").trigger("reset");
-                },
+                    $("#addProperty").trigger('reset');
+                }
             });
         });
 
@@ -421,7 +446,7 @@
 
             $.ajax({
                 type: "POST",
-                url: url + "edit",
+                url: url + "getEdit",
                 data: { id: id },
                 dataType: "json",
                 success: function (response) {
@@ -446,6 +471,12 @@
                     facilityData.forEach((element) => {
                         $("#contoh" + element).prop("checked", true);
                     });
+
+                    let imageModal = document.querySelectorAll('.img_edit');
+                    imageModal.forEach(element => {
+                        element.src = response.data.FileURL;
+                    });
+
 
                     //Edit Submit
                     $("#editProperty").submit(function (evt, ui) {

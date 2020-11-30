@@ -123,14 +123,17 @@ class AgentDataPageController extends PageController{
         $agent = AgentData::get_by_id($id);
 
         // $image = Image::get_by_id();
-        $test = $this->uploadFile();
-        print_r($image);die($test);
-        // $agent->Images()->add($image);
+        $image = $this->uploadFile();
+        // print_r($test);die();
+        $agent->Images()->add($image);
 
-        print_r($agent->Images());die();
+        $data = [
+            'status' => 200,
+            'message' => 'Image has been uploaded',
+            'data' => []
+        ];
 
-        print_r($_REQUEST);
-        print_r($_FILES);die();
+        return json_encode($data);
     }
 
     private function uploadFile(){

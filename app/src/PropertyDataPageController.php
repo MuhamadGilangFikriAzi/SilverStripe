@@ -8,12 +8,14 @@ use FacilityData;
 use PageController;
 use phpDocumentor\Reflection\Types\Parent_;
 use PropertyData;
+use SilverStripe\Assets\File;
+use SilverStripe\Assets\Upload;
 use SilverStripe\ORM\ArrayList;
 
 class PropertyDataPageController extends PageController{
 
     private static $allowed_actions = [
-        'getData','delete','edit','store'
+        'getData','delete','getEdit','store','update'
     ];
 
     function getCategory(){
@@ -92,22 +94,20 @@ class PropertyDataPageController extends PageController{
     }
 
     function store(){
-        //craete property
-         //Add
-         $create = (isset($_REQUEST['data'])) ? $_REQUEST['data'] : '';
-         $data = [];
 
-         parse_str($create, $data);
-        print_r($data);die();
-         if(!empty($data)){
-            $create = PropertyData::create($data)->write();
-            $proprty = PropertyData::get()->byID($create);
+         $create = $_REQUEST;
+         $create['ImageID'] = $this->uploadFile();
 
-            //set data for facility and agent
-            $facility = $data['FacilityDataID'];
+         //set data for facility and agent
+         $facility = $create['FacilityDataID'];
+         unset($create['FacilityDataID']);
+
+         if(!empty($create)){
+            $createID = PropertyData::create($create)->write();
+            $proprty = PropertyData::get()->byID($createID);
 
             //craete many many realation facility
-            foreach ($facility as $key => $value) {
+            foreach ($facility as $value) {
                 $facilityData = FacilityData::get()->byID($value);
 
                 $proprty->Facility()->add($facilityData);
@@ -138,13 +138,22 @@ class PropertyDataPageController extends PageController{
         return $this->getData();
     }
 
-    public function edit(){
+    public function getEdit(){
         $proprty = PropertyData::get()->byID($_POST['id']);
         $facility = $proprty->Facility();
 
         $facilityData = array();
         foreach ($facility as $key => $value) {
             array_push($facilityData, $value->ID);
+        }
+
+        $img_id = !empty($proprty->ImageID) ? (int) $proprty->ImageID : 0;
+
+        if(!empty($img_id)){
+            $fileData = File::get()->byID($img_id);
+            $file = $fileData->getAbsoluteURL();
+        }else{
+            $file = '#';
         }
 
         $result = [
@@ -158,7 +167,8 @@ class PropertyDataPageController extends PageController{
                 'VendorName' => $proprty->VendorName,
                 'VendorPhone' => $proprty->VendorPhone,
                 'CategoryID' => $proprty->CategoryID,
-                'FacilityData' => $facilityData
+                'FacilityData' => $facilityData,
+                'FileURL' => $file
             ]
         ];
 
@@ -168,27 +178,32 @@ class PropertyDataPageController extends PageController{
     public function update($data){
 
         //Edit
-        $edit = (isset($_REQUEST['data'])) ? $_REQUEST['data'] : '';
-        $data = [];
-        parse_str($edit, $data);
+        $edit = $_REQUEST;
+        if(!empty($edit)){
+            $update = PropertyData::get()->byID($edit['id']);
 
-        if(!empty($data)){
-            $update = PropertyData::get()->byID($data['id']);
+            if(empty($_FILES)){
+                $file = File::get()->byID($update->ImageID);
+                $file->delete();
+
+                $update->ImageID = $this->uploadFile();
+            }
+
             $update->deleteFacility($update->ID);
 
             //Insert facility
-            foreach ($data['editFacilityDataID'] as $value) {
+            foreach ($edit['editFacilityDataID'] as $value) {
                 $facility = FacilityData::get()->byID($value);
 
                 $update->Facility()->add($facility);
             }
 
-            $update->Address = $data['Address'];
-            $update->AddressFull = $data['AddressFull'];
-            $update->Phone = $data['Phone'];
-            $update->VendorName = $data['VendorName'];
-            $update->VendorPhone = $data['VendorPhone'];
-            $update->CategoryID = $data['CategoryID'];
+            $update->Address = $edit['Address'];
+            $update->AddressFull = $edit['AddressFull'];
+            $update->Phone = $edit['Phone'];
+            $update->VendorName = $edit['VendorName'];
+            $update->VendorPhone = $edit['VendorPhone'];
+            $update->CategoryID = $edit['CategoryID'];
             $update->write();
 
             $message = 'Data has been updated';
@@ -206,6 +221,16 @@ class PropertyDataPageController extends PageController{
 
         return json_encode($data);
 
+    }
+
+    private function uploadFile(){
+        $upload = new Upload();
+        $file = new File();
+        $tanggal = date('d-m-Y');
+        $upload->loadIntoFile($_FILES['Photo'], $file, 'File/'.$tanggal);
+        $file->write();
+
+        return $file->ID;
     }
 
 }

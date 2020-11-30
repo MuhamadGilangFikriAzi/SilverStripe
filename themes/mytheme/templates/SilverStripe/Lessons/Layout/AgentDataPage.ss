@@ -81,7 +81,7 @@
 
                 <div class="form-group">
                     <label for="">Price</label>
-                    <input type="text" name="price" class="form-control" id="price">
+                    <input type="text" name="Salary" class="form-control" id="price" required>
                 </div>
                 <div class="form-group">
                     <label for="">PropertyData</label>
@@ -196,7 +196,7 @@
     </div>
   </div>
 <!-- $ThemeDir.debug -->
-  <script src="$ThemeDir/javascript/common/autoNumeric.js"></script>
+<script src="$ThemeDir/javascript/common/autoNumeric.js"></script>
 <script>
     var params = [];
     var table;
