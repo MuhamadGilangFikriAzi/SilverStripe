@@ -179,14 +179,17 @@ class PropertyDataPageController extends PageController{
 
         //Edit
         $edit = $_REQUEST;
+        $fileURL = '';
         if(!empty($edit)){
             $update = PropertyData::get()->byID($edit['id']);
-
-            if(empty($_FILES)){
-                $file = File::get()->byID($update->ImageID);
-                $file->delete();
+            // print_r($_FILES);die();
+            if(!empty($_FILES)){
+                // $file = File::get()->byID($update->ImageID);
+                // $file->delete();
 
                 $update->ImageID = $this->uploadFile();
+                $image = File::get_by_id($update->ImageID);
+                $fileURL = $image->getAbsoluteURL();
             }
 
             $update->deleteFacility($update->ID);
@@ -216,7 +219,9 @@ class PropertyDataPageController extends PageController{
         $data = [
             'message' => $message,
             'status' => $status,
-            'data' => []
+            'data' => [
+                'FileURL' => $fileURL
+            ]
         ];
 
         return json_encode($data);

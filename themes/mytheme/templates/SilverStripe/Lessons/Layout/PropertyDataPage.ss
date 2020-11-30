@@ -477,29 +477,36 @@
                         element.src = response.data.FileURL;
                     });
 
-
-                    //Edit Submit
-                    $("#editProperty").submit(function (evt, ui) {
-                        evt.preventDefault();
-                        edit = $(this).serialize();
-
-                        $.ajax({
-                            type: "post",
-                            url: url + "update",
-                            data: { data: edit },
-                            dataType: "json",
-                            success: function (data) {
-                                table.ajax.reload();
-                                alert(data.message);
-                            },
-                        });
-                    });
                 },
             });
 
             let facility = document.querySelectorAll(".editFacilityDataID");
             facility.forEach((element) => {
                 element.checked = false;
+            });
+        });
+
+        //Edit Submit
+        $("#editProperty").submit(function (evt, ui) {
+            evt.preventDefault();
+
+            $.ajax({
+                type: "post",
+                url: url + "update",
+                data: new FormData(this),
+                enctype : 'multipart/form-data',
+                processData : false,
+                contentType : false,
+                dataType: "json",
+                success: function (data) {
+                    let imageModal = document.querySelectorAll('.img_edit');
+                    imageModal.forEach(element => {
+                        element.src = data.data.FileURL;
+                    });
+
+                    table.ajax.reload();
+                    alert(data.message);
+                },
             });
         });
 
