@@ -56,12 +56,17 @@
                                 >
                                     Add
                                 </button>
+
                                 <button
-                                    style="float: right; margin-right: 17px"
+                                    style="float: right; margin-right: 17px;"
                                     type="submit"
                                     class="btn btn-primary"
                                 >
                                     Search
+                                </button>
+
+                                <button type="button" class="btn btn-warning" style="float: right; margin-right: 17px" id="reset-form">
+                                    Reset
                                 </button>
                             </form>
                         </div>
@@ -399,6 +404,14 @@
             table.ajax.reload();
         });
 
+        $('#reset-form').click(function(){
+
+            $('#search_field').trigger('reset');
+            $('#search_field').trigger('submit');
+
+            table.ajax.reload();
+        })
+;
         //Create
         $("#addProperty").submit(function (evt, ui) {
             evt.preventDefault();
@@ -556,10 +569,9 @@
 
             columnDefs: [
                 {
-                    searchable: true,
-                    orderable: true,
-                    targets: -1,
-                    // "defaultContent": "<button type='button' class='btn btn-danger'>delete</button>",
+                    // searchable: true,
+                    orderable: false,
+                    targets: [0,5],
                 },
             ],
             deferRender: true,
