@@ -13,7 +13,7 @@ use SilverStripe\Assets\Upload;
 class AgentDataPageController extends PageController{
 
     private static $allowed_actions = [
-        'getData','edit','delete','store','update','dropZone','getDropZone'
+        'getData','edit','delete','store','update','dropZone','getDropZone','getProperty'
     ];
 
     private function getUploadImagesFieldGroup() {
@@ -36,6 +36,10 @@ class AgentDataPageController extends PageController{
 
     function getPropertyData(){
         return PropertyData::get();
+    }
+
+    public function getProperty(){
+        return json_encode(PropertyData::get()->map('ID','Name'));
     }
 
     public function getData(){

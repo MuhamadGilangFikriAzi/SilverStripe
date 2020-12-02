@@ -29,6 +29,9 @@
                                     Add
                                 </button>
                                 <button style="float: right; margin-right: 17px;" type="submit" class="btn btn-primary">Search</button>
+                                <button type="button" class="btn btn-warning" style="float: right; margin-right: 17px" id="reset-form">
+                                    Reset
+                                </button>
                                 <!-- <button type="button" class="btn btn-primary" id="test"></button> -->
                             </form>
                         </div>
@@ -47,6 +50,7 @@
 
                              </table>
                         </div>
+
                     </div>
                 </div>
 			</div>
@@ -54,6 +58,12 @@
 		</div>
 	</div>
 </div>
+
+<style>
+    .select2-container {
+        width: 100% !important;
+    }
+</style>
 
   <!-- Modal Create-->
   <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -71,34 +81,39 @@
             <div class="modal-body">
 
                 <div class="form-group">
-                    <label for="">Name</label>
-                    <input type="text" name="Name" class="form-control" required>
+                    <label for="">Name*</label>
+                    <input type="text" name="Name" class="form-control" required minlength="8" maxlength="10">
                 </div>
                 <div class="form-group">
-                    <label for="">Address</label>
+                    <label for="">Address*</label>
                     <input type="text" name="Address" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="">Phone</label>
-                    <input type="text" name="Phone" class="form-control phone" id="phone" required>
+                    <label for="">Phone*</label>
+                    <input type="text" name="Phone" class="form-control phone" id="phone" required placeholder="+62-">
                 </div>
 
                 <div class="form-group">
-                    <label for="">Price</label>
+                    <label for="">Price*</label>
                     <input type="text" name="Salary" class="form-control" id="price" required>
                 </div>
-                <div class="form-group">
-                    <label for="">PropertyData</label>
-                    <select name="PropertyDataID" class="form-control" required>
-                        <option value="">-- PropertyData --</option>
-                        <% loop $getPropertyData %>
-                            <option value="$ID">$Address</option>
-                        <% end_loop %>
-                    </select>
+                <div class="form-group row">
+                    <div class="col-md-2">
+                        <label for="">PropertyData*</label>
+                    </div>
+
+                    <div class="col-md-10">
+                        <select name="PropertyDataID" class="form-control select2" required>
+                            <!-- <option value="">-- PropertyData --</option> -->
+                            <% loop $getPropertyData %>
+                                <option value="$ID">$Address</option>
+                            <% end_loop %>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="photo">File</label>
+                    <label for="photo">File*</label>
                     <input type="file" name="file" class="form-control form-control-file" id="addPhoto">
                 </div>
 
@@ -144,7 +159,7 @@
                         </div>
                         <div class="form-group">
                             <label for="">PropertyData</label>
-                            <select name="PropertyDataID" class="form-control" required id="editPropertyDataID">
+                            <select name="PropertyDataID" class="form-control select2" required id="editPropertyDataID">
                                 <option value="">-- PropertyData --</option>
                                 <% loop $getPropertyData %>
                                     <option value="$ID">$Address</option>
@@ -218,6 +233,18 @@
 
         let url = $("#baseUrl").data("url");
         let param_asal = 1;
+
+        //Select 2
+        $('.select2').select2({
+            dropdownParent: $("#addModal")
+        });
+
+        // Reset button
+        $('#reset-form').click(function(){
+
+            $('#search_field').trigger('reset');
+            $('#search_field').trigger('submit');
+        })
 
         // dropZone
         $(document).on('click','.image', function(e){
