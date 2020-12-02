@@ -115,58 +115,60 @@
 
    <!-- Modal Edit-->
    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Edit Property</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Edit Property</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
 
-        <!-- Form edit Agent -->
-        <form id="editAgent" method="POST" enctype="multipart/form-data">
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="">Name</label>
-                    <input type="hidden" name="ID" id="editID">
-                    <input type="text" name="Name" class="form-control" required id="editName">
-                </div>
-                <div class="form-group">
-                    <label for="">Address</label>
-                    <input type="text" name="Address" class="form-control" required id="editAddress">
-                </div>
-                <div class="form-group">
-                    <label for="">Phone</label>
-                    <input type="text" name="Phone" class="form-control phone" required id="editPhone">
-                </div>
-                <div class="form-group">
-                    <label for="">PropertyData</label>
-                    <select name="PropertyDataID" class="form-control" required id="editPropertyDataID">
-                        <option value="">-- PropertyData --</option>
-                        <% loop $getPropertyData %>
-                            <option value="$ID">$Address</option>
-                        <% end_loop %>
-                    </select>
-                </div>
-                < class="form-group">
-                    <label for="file">File</label>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <a href="#" target="_blank" class="btn btn-warning btn-block" id="downloadFile"><i class="fa fa-download"></i> Download File <span id="nameFile"></span></a>
+                <!-- Form edit Agent -->
+                <form id="editAgent" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="">Name</label>
+                            <input type="hidden" name="ID" id="editID">
+                            <input type="text" name="Name" class="form-control" required id="editName">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Address</label>
+                            <input type="text" name="Address" class="form-control" required id="editAddress">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Phone</label>
+                            <input type="text" name="Phone" class="form-control phone" required id="editPhone">
+                        </div>
+                        <div class="form-group">
+                            <label for="">PropertyData</label>
+                            <select name="PropertyDataID" class="form-control" required id="editPropertyDataID">
+                                <option value="">-- PropertyData --</option>
+                                <% loop $getPropertyData %>
+                                    <option value="$ID">$Address</option>
+                                <% end_loop %>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="file">File</label>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <a href="#" target="_blank" class="btn btn-warning btn-block" id="downloadFile"><i class="fa fa-download"></i> Download File <span id="nameFile"></span></a>
+                                </div>
                             </div>
                         </div>
 
-                        </div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Create</button>
-                        </div>
-
-            </form>
-        <!-- End Form edit -->
-      </div>
+                <!-- End Form edit -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
+    <!-- End Modal Edit -->
 
   <!-- Modal upload-->
   <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

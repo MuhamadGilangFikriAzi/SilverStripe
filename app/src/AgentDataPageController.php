@@ -101,8 +101,6 @@ class AgentDataPageController extends PageController{
 
     public function store(){
 
-        print_r($_REQUEST);
-        print_r($_FILES);
         $create = $_REQUEST;
         $fileID['FileID'] = $this->uploadFile();
         $dataCreate = array_merge($create, $fileID);
