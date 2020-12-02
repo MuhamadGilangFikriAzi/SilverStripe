@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "autonumeric": "^4.6.0"
+    "autonumeric": "^4.6.0",
+    "svelte-imask": "^1.2.0"
   }
 }

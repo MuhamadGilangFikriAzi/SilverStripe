@@ -44,6 +44,7 @@ $MetaTags(false)
 
         <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
         <script src="$ThemeDir/javascript/dropzone-5.7.0/dist/dropzone.js"></script>
+        <script src="https://unpkg.com/imask"></script>
 
 </head>
 <body class="$ClassName.ShortName<% if not $Menu(2) %> no-sidebar<% end_if %>" <% if $i18nScriptDirection %>dir="$i18nScriptDirection"<% end_if %>>

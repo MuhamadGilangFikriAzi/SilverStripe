@@ -13,7 +13,7 @@ use SilverStripe\Assets\Upload;
 class AgentDataPageController extends PageController{
 
     private static $allowed_actions = [
-        'getData','edit','delete','store','update','dropZone'
+        'getData','edit','delete','store','update','dropZone','getDropZone'
     ];
 
     private function getUploadImagesFieldGroup() {
@@ -42,7 +42,7 @@ class AgentDataPageController extends PageController{
         $arr = array();
         $count = 0;
         $data = AgentData::get()->where('"Delete" = 0');
-        // print_r($data);die();
+        // print_r($data->first()->AgentDataGallery()->first()->File()->getAbsoluteUrl());die();
         $draw = isset($_REQUEST['draw']) ? $_REQUEST['draw'] : '';
         $start = isset($_REQUEST['start']) ? $_REQUEST['start'] : 0;
         $length = isset($_REQUEST['length']) ? $_REQUEST['length'] : 10;
@@ -112,6 +112,29 @@ class AgentDataPageController extends PageController{
             'status' => 200,
             'message' => 'Data has been added',
             'data' => []
+        ];
+
+        return json_encode($data);
+    }
+
+    public function getDropZone(){
+        $agentData = AgentData::get_by_id($_REQUEST['id'])->AgentDataGallery();
+        $getFile = [];
+
+        foreach ($agentData as $key => $value) {
+
+            $getFile[] = [
+                'Name' => $value->Name,
+                'URL' => $value->File()->getAbsoluteUrl(),
+                'Size' => $value->File()->getSize()
+            ];
+
+        }
+
+        $data = [
+            'status' => 200,
+            'message' => 'data has ben succusfuly geter',
+            'data' => $getFile
         ];
 
         return json_encode($data);

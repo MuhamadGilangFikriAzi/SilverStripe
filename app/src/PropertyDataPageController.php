@@ -203,11 +203,8 @@ class PropertyDataPageController extends PageController{
         $fileURL = '';
         if(!empty($edit)){
             $update = PropertyData::get()->byID($edit['id']);
-            // print_r($_FILES);die();
-            if(!empty($_FILES)){
-                // $file = File::get()->byID($update->ImageID);
-                // $file->delete();
 
+            if(!empty($_FILES)){
                 $update->ImageID = $this->uploadFile();
                 $image = File::get_by_id($update->ImageID);
                 $fileURL = $image->getAbsoluteURL();
