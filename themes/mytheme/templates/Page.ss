@@ -24,10 +24,6 @@ $MetaTags(false)
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
-	<!-- <% require themedCSS('reset') %>
-	<% require themedCSS('typography') %>
-	<% require themedCSS('form') %>
-	<% require themedCSS('layout') %> -->
     <link rel="shortcut icon" href="themes/simple/images/favicon.ico" />
     <!-- <% require javascript('//code.jquery.com/jquery-3.3.1.min.js') %> -->
 
@@ -51,8 +47,22 @@ $MetaTags(false)
 <% include Header %>
 <div class="main" role="main">
     <div class="inner typography line">
-        <% include Banner %>
-		$Layout
+        <div class="wrapper">
+            <div class="content-wrapper">
+                <section>
+                    <div class="content">
+                        <div class="container-fluid">
+                            <div class="row justify-content-center">
+                                <div class="col-sm-12">
+                                    <% include Banner %>
+		                            $Layout
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
 	</div>
 </div>
 <% include Footer %>

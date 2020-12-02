@@ -33,18 +33,20 @@
                             </form>
                         </div>
 
-                        <table class="table table-responsive table-bordered" style="margin-top: 50px;" id="table">
-                           <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Address</th>
-                                <th>Phone</th>
-                                <th>PropertyData</th>
-                                <th>Action</th>
-                            </tr>
-                           </thead>
+                        <div class="table table-responsive">
+                            <table class="table table-responsive table-hover" style="margin-top: 50px;" id="table">
+                                <thead>
+                                 <tr>
+                                     <th>Name</th>
+                                     <th>Address</th>
+                                     <th>Phone</th>
+                                     <th>PropertyData</th>
+                                     <th>Action</th>
+                                 </tr>
+                                </thead>
 
-                        </table>
+                             </table>
+                        </div>
                     </div>
                 </div>
 			</div>
@@ -391,6 +393,7 @@
 
         //DataTable
         table = $('#table').DataTable({
+            "responsive": true,
             "processing" : true,
             "serverSide" : true,
             "paging" : true,
@@ -430,9 +433,9 @@
                 },
 
                 "columnDefs": [ {
-                    "searchable": true,
-                    "orderable": true,
-                    "targets": -1,
+                    // "searchable": true,
+                    "orderable": false,
+                    "targets": [0,3,4],
                     // "defaultContent": "<button type='button' class='btn btn-danger'>delete</button>",
                 } ],
                 "deferRender" : true,
