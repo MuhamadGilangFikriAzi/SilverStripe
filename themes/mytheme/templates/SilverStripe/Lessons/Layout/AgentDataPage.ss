@@ -59,12 +59,6 @@
 	</div>
 </div>
 
-<style>
-    .select2-container {
-        width: 100% !important;
-    }
-</style>
-
   <!-- Modal Create-->
   <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -81,45 +75,42 @@
             <div class="modal-body">
 
                 <div class="form-group">
-                    <label for="">Name*</label>
+                    <label for="">Name <span class="text-danger">*</span></label>
                     <input type="text" name="Name" class="form-control" required minlength="8" maxlength="10">
                 </div>
                 <div class="form-group">
-                    <label for="">Address*</label>
+                    <label for="">Address <span class="text-danger">*</span></label>
                     <input type="text" name="Address" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="">Phone*</label>
+                    <label for="">Phone <span class="text-danger">*</span></label>
                     <input type="text" name="Phone" class="form-control phone" id="phone" required placeholder="+62-">
                 </div>
 
                 <div class="form-group">
-                    <label for="">Price*</label>
+                    <label for="">Price <span class="text-danger">*</span></label>
                     <input type="text" name="Salary" class="form-control" id="price" required>
-                </div>
-                <div class="form-group row">
-                    <div class="col-md-2">
-                        <label for="">PropertyData*</label>
-                    </div>
-
-                    <div class="col-md-10">
-                        <select name="PropertyDataID" class="form-control select2" required>
-                            <!-- <option value="">-- PropertyData --</option> -->
-                            <% loop $getPropertyData %>
-                                <option value="$ID">$Address</option>
-                            <% end_loop %>
-                        </select>
-                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="photo">File*</label>
+
+                    <label for="">PropertyData <span class="text-danger">*</span></label>
+                    <select name="PropertyDataID" data-live-search="true" class="form-control selectpicker" data-style="" required id="addProperty">
+                        <option value="">-- Property Data --</option>
+                        <% loop $getPropertyData %>
+                            <option value="$ID">$Address</option>
+                        <% end_loop %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="photo">File <span class="text-danger">*</span></label>
                     <input type="file" name="file" class="form-control form-control-file" id="addPhoto">
                 </div>
 
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn modal-close btn-secondary" data-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary">Create</button>
             </div>
 
@@ -145,21 +136,21 @@
                 <form id="editAgent" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="">Name</label>
+                            <label for="">Name <span class="text-danger">*</span></label>
                             <input type="hidden" name="ID" id="editID">
                             <input type="text" name="Name" class="form-control" required id="editName">
                         </div>
                         <div class="form-group">
-                            <label for="">Address</label>
+                            <label for="">Address <span class="text-danger">*</span></label>
                             <input type="text" name="Address" class="form-control" required id="editAddress">
                         </div>
                         <div class="form-group">
-                            <label for="">Phone</label>
+                            <label for="">Phone <span class="text-danger">*</span></label>
                             <input type="text" name="Phone" class="form-control phone" required id="editPhone">
                         </div>
                         <div class="form-group">
-                            <label for="">PropertyData</label>
-                            <select name="PropertyDataID" class="form-control select2" required id="editPropertyDataID">
+                            <label for="">PropertyData <span class="text-danger">*</span></label>
+                            <select name="PropertyDataID" data-live-search="true" class="form-control selectpicker" data-style="" required id="editPropertyDataID">
                                 <option value="">-- PropertyData --</option>
                                 <% loop $getPropertyData %>
                                     <option value="$ID">$Address</option>
@@ -167,7 +158,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="file">File</label>
+                            <label for="file">File <span class="text-danger">*</span></label>
                             <div class="row">
                                 <div class="col-sm-12">
                                     <a href="#" target="_blank" class="btn btn-warning btn-block" id="downloadFile"><i class="fa fa-download"></i> Download File <span id="nameFile"></span></a>
@@ -178,7 +169,7 @@
                 <!-- End Form edit -->
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn modal-close btn-secondary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">update</button>
                     </div>
                 </form>
@@ -215,6 +206,7 @@
     var table;
     var sorting = [];
 
+    // set format for phone number
     var phone = document.querySelectorAll('.phone');
     var maskOptions = {
      mask: '+{62}-000-0000-000000'
@@ -223,28 +215,49 @@
     phone.forEach(element => {
         var mask = IMask(element, maskOptions);
     });
+    // end format for phone number
 
 
     $(document).ready(function () {
 
-        const formatCur = {mDec:0, aSep:'.', aDec:','};
-
-        $('#price').autoNumeric('init', formatCur);
-
         let url = $("#baseUrl").data("url");
         let param_asal = 1;
 
+        // set format number
+        const formatCur = {mDec:0, aSep:'.', aDec:','};
+        $('#price').autoNumeric('init', formatCur);
+        // end format number
+
+        // $(document).on('click','.modal-close', function(){
+        //     Swal.fire({
+        //     title: 'Are you sure?',
+        //     text: "You won't be able to close this!",
+        //     icon: 'warning',
+        //     showCancelButton: true,
+        //     confirmButtonColor: '#3085d6',
+        //     cancelButtonColor: '#d33',
+        //     confirmButtonText: 'Yes, close it!'
+        //     }).then((result) => {
+        //         if (result.isConfirmed) {
+        //             Swal.fire(
+        //             'Deleted!',
+        //             'form has been closed.',
+        //             'success'
+        //             );
+        //         }
+        //     })
+        // });
+
         //Select 2
-        $('.select2').select2({
-            dropdownParent: $("#addModal")
-        });
+        $('select').selectpicker();
+        // End Select2
 
         // Reset button
         $('#reset-form').click(function(){
-
             $('#search_field').trigger('reset');
             $('#search_field').trigger('submit');
         })
+        // End Reset button
 
         // dropZone
         $(document).on('click','.image', function(e){
@@ -253,6 +266,7 @@
             $(document).find('#hiddenID').val(id);
             $('#dropZone').trigger('reset');
         });
+        // end dropZone
 
         //Search
         $("#search_field").submit(function(evt, ui)
@@ -262,6 +276,7 @@
 
             table.ajax.reload();
         });
+        //end Search
 
         //Create
         $("#addAgent").submit(function(evt, ui)
@@ -282,28 +297,45 @@
                 }
             });
         });
+        //end create
 
         //Delete
         $(document).on('click','.delete', function(e){
             e.preventDefault();
 
-            var result = confirm('are you realy to delete this');
-            if(result){
-                var del = $(this).data('id');
+            Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                    );
+                    var del = $(this).data('id');
 
-                $.ajax({
-                    type: "post",
-                    url: url+"delete",
-                    data: {"id" : del},
-                    dataType: "json",
-                    success: function (response) {
-                        table.ajax.reload();
-                    }
-                });
-            }
+                    $.ajax({
+                        type: "post",
+                        url: url+"delete",
+                        data: {"id" : del},
+                        dataType: "json",
+                        success: function (response) {
+                            table.ajax.reload();
+                        }
+                    });
+                }
+            })
+
         });
+        // End delete
 
-        //Edit Show
+        //get data edit
         $(document).on('click','.edit', function(e){
             modal = $('#editModal');
             var id = $(this).data('id');
@@ -320,12 +352,13 @@
                     $(document).find('#editName').val(response.data.Name);
                     $(document).find('#editAddress').val(response.data.Address);
                     $(document).find('#editPhone').val(response.data.Phone);
-                    $(document).find('#editPropertyDataID').val(response.data.PropertyDataID);
+                    $(document).find('#editPropertyDataID').selectpicker('val', response.data.PropertyDataID);
                     $(document).find('#downloadFile').attr('href', response.data.File.URL);
                     $(document).find('#nameFile').html(response.data.File.Name);
                 }
             });
         });
+        //end get data edit
 
          //Edit Submit
          $("#editAgent").submit(function(evt, ui){
@@ -346,8 +379,8 @@
                     alert(response.message);
                 }
             });
-
         });
+        // End Edit submit
 
         // when click upload
         $(document).on('click','.image', function(){
@@ -417,6 +450,7 @@
                 }
             });
         });
+        // End click upload
 
         //DataTable
         table = $('#table').DataTable({
@@ -468,5 +502,6 @@
                 "deferRender" : true,
         });
     });
+    // End DataTable
 </script>
 
