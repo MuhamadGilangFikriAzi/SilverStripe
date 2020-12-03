@@ -6,7 +6,6 @@
 
             <!-- BEGIN MAIN CONTENT -->
 
-
             <div class="main col-sm">
                 <div class="card">
                     <div class="card-body">
@@ -25,11 +24,11 @@
                                     <input type="text" name="Phone" class="form-control search" placeholder="Search Phone...">
                                 </div>
 
-                                <button type="button" class="btn btn-sm btn-primary" style="margin-left: 13px;" data-toggle="modal" data-target="#addModal">
+                                <button type="button" class="btn btn-sm btn-gray" style="margin-left: 13px;" data-toggle="modal" data-target="#addModal">
                                     Add
                                 </button>
-                                <button style="float: right; margin-right: 17px;" type="submit" class="btn btn-primary">Search</button>
-                                <button type="button" class="btn btn-warning" style="float: right; margin-right: 17px" id="reset-form">
+                                <button style="float: right; margin-right: 17px;" type="submit" class="btn btn-sm btn-gray">Search</button>
+                                <button type="button" class="btn btn-sm btn-gray" style="float: right; margin-right: 17px" id="reset-form">
                                     Reset
                                 </button>
                                 <!-- <button type="button" class="btn btn-primary" id="test"></button> -->
@@ -50,7 +49,6 @@
 
                              </table>
                         </div>
-
                     </div>
                 </div>
 			</div>
@@ -89,7 +87,7 @@
 
                 <div class="form-group">
                     <label for="">Price <span class="text-danger">*</span></label>
-                    <input type="text" name="Salary" class="form-control" id="price" required>
+                    <input type="text" name="Salary" data-a-sign="Rp. " class="form-control text-right" id="price" required>
                 </div>
 
                 <div class="form-group">
@@ -224,29 +222,9 @@
         let param_asal = 1;
 
         // set format number
-        const formatCur = {mDec:0, aSep:'.', aDec:','};
+        const formatCur = {mDec:0 , aSep:'.', aDec:',', asign:"Rp."};
         $('#price').autoNumeric('init', formatCur);
         // end format number
-
-        // $(document).on('click','.modal-close', function(){
-        //     Swal.fire({
-        //     title: 'Are you sure?',
-        //     text: "You won't be able to close this!",
-        //     icon: 'warning',
-        //     showCancelButton: true,
-        //     confirmButtonColor: '#3085d6',
-        //     cancelButtonColor: '#d33',
-        //     confirmButtonText: 'Yes, close it!'
-        //     }).then((result) => {
-        //         if (result.isConfirmed) {
-        //             Swal.fire(
-        //             'Deleted!',
-        //             'form has been closed.',
-        //             'success'
-        //             );
-        //         }
-        //     })
-        // });
 
         //Select 2
         $('select').selectpicker();
@@ -292,7 +270,11 @@
                 enctype: 'multipart/form-data',
                 success: function (response) {
                     table.ajax.reload();
-                    alert(response.message);
+                    Swal.fire(
+                        'Saved',
+                        'Your data has been saved.',
+                        'success'
+                    );
                     $("#addAgent").trigger('reset');
                 }
             });
@@ -303,34 +285,52 @@
         $(document).on('click','.delete', function(e){
             e.preventDefault();
 
-            Swal.fire({
+            const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
             }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                    );
-                    var del = $(this).data('id');
+            if (result.isConfirmed) {
 
-                    $.ajax({
-                        type: "post",
-                        url: url+"delete",
-                        data: {"id" : del},
-                        dataType: "json",
-                        success: function (response) {
-                            table.ajax.reload();
-                        }
-                    });
-                }
-            })
+                swalWithBootstrapButtons.fire(
+                'Deleted!',
+                'Your file has been deleted.',
+                'success'
+                );
+                var del = $(this).data('id');
+                $.ajax({
+                    type: "post",
+                    url: url+"delete",
+                    data: {"id" : del},
+                    dataType: "json",
+                    success: function (response) {
+                        table.ajax.reload();
+                    }
+                });
+
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                'Cancelled',
+                'Your imaginary file is safe :)',
+                'error'
+                )
+            }
+            });
 
         });
         // End delete
@@ -376,7 +376,12 @@
                 enctype: 'multipart/form-data',
                 success: function (response) {
                     table.ajax.reload();
-                    alert(response.message);
+                    Swal.fire(
+                        'Saved',
+                        'Your data has been updated.',
+                        'success'
+                    );
+                    $("#addAgent").trigger('reset');
                 }
             });
         });
@@ -496,7 +501,7 @@
                 "columnDefs": [ {
                     // "searchable": true,
                     "orderable": false,
-                    "targets": [0,3,4],
+                    "targets": [3,4],
                     // "defaultContent": "<button type='button' class='btn btn-danger'>delete</button>",
                 } ],
                 "deferRender" : true,

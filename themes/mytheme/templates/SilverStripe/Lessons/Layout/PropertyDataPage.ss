@@ -436,20 +436,34 @@
         $(document).on("click", ".delete", function (e) {
             e.preventDefault();
 
-            var result = confirm("are you realy to delete this");
-            if (result) {
-                var del = $(this).data("id");
+            Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                    );
+                    var del = $(this).data("id");
 
-                $.ajax({
-                    type: "post",
-                    url: url + "delete",
-                    data: { id: del },
-                    dataType: "json",
-                    success: function (response) {
-                        table.ajax.reload();
-                    },
-                });
-            }
+                    $.ajax({
+                        type: "post",
+                        url: url + "delete",
+                        data: { id: del },
+                        dataType: "json",
+                        success: function (response) {
+                            table.ajax.reload();
+                        },
+                    });
+                }
+            })
         });
 
         //Edit Show

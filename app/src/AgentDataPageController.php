@@ -76,7 +76,20 @@ class AgentDataPageController extends PageController{
         $dataCont = $data->count();
         $data = $data->limit($length, $start);
 
+
+
         foreach ($data as $value) {
+            $btn = "
+            <div class='btn-group dropleft'>
+                <button type='button' class='btn btn-secondary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                    Action
+                </button>
+                <div class='dropdown-menu dropdown-menu-left'>
+                    <button class='dropdown-item col-sm-12 btn btn-white edit' data-ID='".$value->ID."' data-toggle='modal' data-target='#editModal'>Edit</button>
+                    <button class='dropdown-item col-sm-12 btn btn-white image' data-ID='".$value->ID."' data-toggle='modal' data-target='#uploadModal' title='upload Images'>Upload</button>
+                    <button class='dropdown-item col-sm-12 btn btn-white delete' data-ID='".$value->ID."'>Delete</button>
+                </div>
+            </div>";
 
             $count += 1;
             $tempArray = array();
@@ -84,7 +97,10 @@ class AgentDataPageController extends PageController{
             $tempArray[] = $value->Address;
             $tempArray[] = $value->Phone;
             $tempArray[] = $value->PropertyData()->Address;
-            $tempArray[] = "<button class='btn btn-info edit' data-ID='".$value->ID."' data-toggle='modal' data-target='#editModal'>edit</button> <button class='btn btn-danger delete' data-ID='".$value->ID."' >delete</button> <button class='btn btn-warning image' type='button' data-ID='".$value->ID."' data-toggle='modal' data-target='#uploadModal' title='upload Images' >upload</button> ";
+            $tempArray[] = $btn;
+
+            // "<button class='btn btn-sm btn-gray edit' data-ID='".$value->ID."' data-toggle='modal' data-target='#editModal'>edit</button>
+            // <button class='btn btn-sm btn-gray delete' data-ID='".$value->ID."' >delete</button> <button class='btn btn-sm btn-gray image' type='button' data-ID='".$value->ID."' data-toggle='modal' data-target='#uploadModal' title='upload Images' >upload</button> ";
 
             $arr[] = $tempArray;
         }
@@ -106,6 +122,9 @@ class AgentDataPageController extends PageController{
     public function store(){
 
         $create = $_REQUEST;
+        $salary = str_replace('Rp.', '', $create['Salary']);
+        $salary = str_replace('.','', $salary);
+        $create['Salary'] = (int)$salary;
         $fileID['FileID'] = $this->uploadFile();
         $dataCreate = array_merge($create, $fileID);
         AgentData::create($dataCreate)->write();

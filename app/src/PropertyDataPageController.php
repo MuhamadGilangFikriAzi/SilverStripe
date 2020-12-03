@@ -67,11 +67,21 @@ class PropertyDataPageController extends PageController{
         $data = $data->limit($length, $start);
 
         foreach ($data as $value) {
+
             $fileURL = '0';
             if($value->ImageID != 0){
                 $image = File::get_by_id($value->ImageID);
                 $fileURL = $image->getAbsoluteURL();
             }
+
+            // $countAgent = ($value->Agent()->count()) ? ' ada' : ' gaada';
+
+            if($value->Agent()->count()){
+                $btn = "<button class='btn btn-info edit' data-ID='".$value->ID."' data-toggle='modal' data-target='#editModal'>edit</button>";
+            }else{
+                $btn = "<button class='btn btn-info edit' data-ID='".$value->ID."' data-toggle='modal' data-target='#editModal'>edit</button> <button class='btn btn-danger delete' data-ID='".$value->ID."' >delete</button> ";
+            }
+
 
             $count += 1;
             $tempArray = array();
@@ -95,7 +105,7 @@ class PropertyDataPageController extends PageController{
             $tempArray[] = $value->Phone;
             $tempArray[] = $value->VendorName;
             $tempArray[] = $value->VendorPhone;
-            $tempArray[] = "<button class='btn btn-info edit' data-ID='".$value->ID."' data-toggle='modal' data-target='#editModal'>edit</button> <button class='btn btn-danger delete' data-ID='".$value->ID."' >delete</button> ";
+            $tempArray[] = $btn;
 
             $arr[] = $tempArray;
         }
