@@ -198,7 +198,7 @@
     </div>
   </div>
 <!-- $ThemeDir.debug -->
-<script src="$ThemeDir/javascript/common/autoNumeric.js"></script>
+
 <script>
     var params = [];
     var table;

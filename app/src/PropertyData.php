@@ -45,6 +45,7 @@ class PropertyData extends DataObject{
         'Image'
     ];
 
+
     private static $searchable_fields = [
         'Address',
         'Phone',

@@ -31,19 +31,21 @@ $MetaTags(false)
     <link rel="stylesheet" href="$ThemeDir/javascript/dropzone-5.7.0/dist/basic.css">
     <link rel="stylesheet" href="$ThemeDir/javascript/dropzone-5.7.0/dist/dropzone.css">
 
+    <!-- <link rel="stylesheet" href="$ThemeDir/javascript/common/jquery-ui.css">
+    <script src="$ThemeDir/javascript/common/jquery-1.12.4.js"></script>
+    <script src="$ThemeDir/javascript/common/jquery-ui.js"></script> -->
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.js" integrity="sha256-DrT5NfxfbHvMHux31Lkhxg42LY6of8TaYyK50jnxRnM=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="$ThemeDir/javascript/dropzone-5.7.0/dist/dropzone.css">
 
-    <!-- <link rel="stylesheet" type="text/css" href="/public/DataTables-1.10.22/css/jquery.dataTables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="$ThemeDir/javascript/dropzone-5.7.0/dist/dropzone.js"></script>
+    <script src="https://unpkg.com/imask"></script>
 
-        <script type="text/javascript" src="/public/DataTables-1.10.22/js/jquery.dataTables.min.js"></script> -->
+    <!-- Sweet alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-        <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-        <script src="$ThemeDir/javascript/dropzone-5.7.0/dist/dropzone.js"></script>
-        <script src="https://unpkg.com/imask"></script>
-
-        <!-- Sweet alert -->
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <!-- DatePicker -->
 
 </head>
 <body class="$ClassName.ShortName<% if not $Menu(2) %> no-sidebar<% end_if %>" <% if $i18nScriptDirection %>dir="$i18nScriptDirection"<% end_if %>>
@@ -73,16 +75,21 @@ $MetaTags(false)
 <% require themedJavascript('script') %>
 
 </body>
+
+<script src="$ThemeDir/javascript/common/alert.js"></script>
+
+<!-- Auto Numeric -->
+<script src="$ThemeDir/javascript/common/autoNumeric.js"></script>
 <!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script> -->
+<scrip src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></scrip> -->
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 
 <!-- Latest compiled and minified JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+<scrip src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></scrip>
 
 <!-- (Optional) Latest compiled and minified JavaScript translation files -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-*.min.js"></script>
+<scrip src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-*.min.js"></scrip>
 
 </html>
 

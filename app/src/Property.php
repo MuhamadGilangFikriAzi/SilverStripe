@@ -50,6 +50,7 @@ class Property extends DataObject{
         'FeaturedOnHomepage'
     ];
 
+
     private static $owns = [
         'PrimaryPhoto'
     ];
