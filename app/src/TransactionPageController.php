@@ -13,6 +13,14 @@ class TransactionPageController extends PageController
         'getProduct','getPrice','store','getData'
     ];
 
+    private function formatNumber($number){
+        return number_format($number,0,",",".");
+    }
+
+    private function reverseFormat($number){
+        return str_replace('.','',$number);
+    }
+
     public function getProduct()
     {
         return Product::get();
@@ -25,7 +33,7 @@ class TransactionPageController extends PageController
             'message' => '',
             'status' => 200,
             'data' => [
-                'Price' => $product->Price,
+                'Price' => $this->formatNumber($product->Price),
             ]
         ];
 
@@ -33,10 +41,15 @@ class TransactionPageController extends PageController
     }
 
     public function store(){
+
         $request = $_REQUEST;
         $detail = $request['detail'];
+        $request['Total'] = $this->reverseFormat($request['Total']);
         unset($request['detail']);
 
+
+        // print_r($detail);
+        // print_r($request);die();
         $lastCode = Transaction::get()->last();
 
         $number = ($lastCode->Kode != null) ? str_replace('T-','', $lastCode->Kode) : 1 ;
@@ -47,6 +60,10 @@ class TransactionPageController extends PageController
         $transaction = Transaction::get_by_id($idTransaction);
 
         foreach ($detail as $value) {
+            $value['Price'] = $this->reverseFormat($value['Price']);
+            $value['Subtotal'] = $this->reverseFormat($value['Subtotal']);
+            $value['Qty'] = $this->reverseFormat($value['Qty']);
+
             $transactionDetail = TransactionDetail::create($value);
             $transaction->TransactionDetail()->add($transactionDetail);
         }

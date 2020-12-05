@@ -113,8 +113,9 @@
     var table;
     var sorting = [];
     let url = $("#baseUrl").data('url');
-    const formatCur = {mDec:0 , aSep:'.', aDec:',', asign:"Rp."};
+
     var i = 0;
+
     $(document).ready(function () {
 
         // $('.date').datepicker({
@@ -142,12 +143,13 @@
             });
         });
 
+        //Add detail
         $(document).on('click','#addDetail', function(){
 
             $('#detail').append(`
                 <div class="row">
                     <div class="col-sm-3">
-                        <select name="detail[${i}][ProductID]" id="" class="form-control product">
+                        <select name="detail[${i}][ProductID]" class="form-control product">
                             <option value="0">...</option>
                             <% loop $getProduct %>
                                 <option value="$ID">$Name</option>
@@ -164,7 +166,7 @@
                     </div>
 
                     <div class="col-sm-3">
-                        <input type="text" name="detail[${i}][Subtotal]" readonly class="form-control text-right subtotal" placeholder="Subtotal" id="">
+                        <input type="text" name="detail[${i}][Subtotal]" readonly class="form-control text-right subtotal" placeholder="Subtotal">
                     </div>
 
                     <div class="col-sm-1">
@@ -172,6 +174,10 @@
                     </div>
                 </div>`
             );
+            const formatCur = {mDec:0 , aSep:'.', aDec:',', asign:"Rp."};
+            $('.qty').autoNumeric('init', formatCur);
+            $('.subtotal').autoNumeric('init', formatCur);
+
             i++;
 
             $('.qty').keyup(function (e) {
@@ -287,33 +293,44 @@
                     // "searchable": true,
                     "orderable": false,
                     "targets": [3,4],
-                    // "defaultContent": "<button type='button' class='btn btn-danger'>delete</button>",
                 } ],
                 "deferRender" : true,
         });
 
     });
 
+    // to count subtotal
     function subtotal(data){
-        var parent = data.parent().parent();
-        var qty = parent.find('.qty').val();
-        var price = parent.find('.price').val();
-        var subtotal = qty * price;
+        const formatCur = {mDec:0 , aSep:'.', aDec:',', asign:"Rp."};
 
-        parent.find('.subtotal').val(subtotal);
+        var parent = data.parent().parent();
+        var qty = parent.find('.qty').val().split('.').join('');
+        var price = parent.find('.price').val().split('.').join('');
+        var subtotal = Number(qty) * Number(price);
+
+        // console.log(subtotal.toLocaleString('de-DE'));
+        parent.find('.subtotal').val(formatNumber(subtotal));
 
         total();
     }
 
+    // to count total
     function total(){
         let subtotal = document.querySelectorAll('.subtotal');
         var total = 0;
         subtotal.forEach(element => {
-            total += Number(element.value);
+
+            total += Number(element.value.split('.').join(''));
         });
 
-        document.querySelector('#total').value = total;
+        document.querySelector('#total').value = formatNumber(total);
     }
+
+    //make format Number
+    function formatNumber(number){
+        return number.toLocaleString('de-DE');
+    }
+
 </script>
 
 

@@ -31,9 +31,9 @@ $MetaTags(false)
     <link rel="stylesheet" href="$ThemeDir/javascript/dropzone-5.7.0/dist/basic.css">
     <link rel="stylesheet" href="$ThemeDir/javascript/dropzone-5.7.0/dist/dropzone.css">
 
-    <!-- <link rel="stylesheet" href="$ThemeDir/javascript/common/jquery-ui.css">
+    <link rel="stylesheet" href="$ThemeDir/javascript/common/jquery-ui.css">
     <script src="$ThemeDir/javascript/common/jquery-1.12.4.js"></script>
-    <script src="$ThemeDir/javascript/common/jquery-ui.js"></script> -->
+    <script src="$ThemeDir/javascript/common/jquery-ui.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.js" integrity="sha256-DrT5NfxfbHvMHux31Lkhxg42LY6of8TaYyK50jnxRnM=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="$ThemeDir/javascript/dropzone-5.7.0/dist/dropzone.css">
