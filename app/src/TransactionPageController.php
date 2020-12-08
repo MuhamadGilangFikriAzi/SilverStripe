@@ -35,6 +35,10 @@ class TransactionPageController extends PageController
         return str_replace('.','',$number);
     }
 
+    private function reverseDate($param){
+        return date('Y-m-d', strtotime(str_replace('/','-',$param)));
+    }
+
     private function getUrl(){
         return Director::absoluteBaseURL().'transaction/';
     }
@@ -118,7 +122,13 @@ class TransactionPageController extends PageController
 
         if(!empty($param_array)){
             foreach ($param_array as $key => $value) {
-                if($key){
+                if($value != null && $key == 'Date'){
+                    $date = $this->reverseDate($value);
+                    $data = $data->where("".$key." LIKE '%".$date."%'");
+                }elseif($value != null && $key == 'Total'){
+                    $total = $this->reverseFormat($value);
+                    $data = $data->where("".$key." LIKE '%".$total."%'");
+                }else{
                     $data = $data->where("".$key." LIKE '%".$value."%'");
                 }
             }
@@ -194,8 +204,6 @@ class TransactionPageController extends PageController
         $delete->Delete = 1;
         $delete->write();
 
-
-
         $data = [
             'message' => 'Data '.$delete->Kode.' has been deleted',
             'status' => 200,
@@ -225,7 +233,7 @@ class TransactionPageController extends PageController
 
         $id = $_REQUEST['id'];
 
-        $date = date('Y-m-d', strtotime(str_replace('/','-',$_REQUEST['Date'])));
+        $date = $this->reverseDate($_REQUEST['Date']);
 
         $transaction = Transaction::get_by_id($id);
         $detail = $transaction->TransactionDetail();

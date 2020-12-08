@@ -9,47 +9,8 @@
             <div class="main col-sm">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row" style="margin-top: 50px;">
-                            <form id="search_field" method="POST">
-
-                                <div class="col-sm-4">
-                                    <input type="text" name="Name" class="form-control search" placeholder="Search Name...">
-                                </div>
-
-                                <div class="col-sm-4">
-                                    <input type="text" name="Address"  class="form-control search" placeholder="Search Address...">
-                                </div>
-
-                                <div class="col-sm-4">
-                                    <input type="text" name="Phone" class="form-control search" placeholder="Search Phone...">
-                                </div>
-
-                                <button style="float: right; margin-right: 17px;" type="submit" class="btn btn-sm btn-gray">Search</button>
-                                <button type="button" class="btn btn-sm btn-gray" style="float: right; margin-right: 17px" id="reset-form">
-                                    Reset
-                                </button>
-                                <!-- <button type="button" class="btn btn-primary" id="test"></button> -->
-                            </form>
-
                             <div class="row">
-                                <div class="col-sm-8">
-                                    <div class="table table-responsive">
-                                        <table class="table table-responsive table-hover" style="margin-top: 50px;" id="table">
-                                            <thead>
-                                             <tr>
-                                                 <th>Kode</th>
-                                                 <th>Name</th>
-                                                 <th>Date</th>
-                                                 <th>Total</th>
-                                                 <th>Action</th>
-                                             </tr>
-                                            </thead>
-
-                                         </table>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-4" style="margin-top: 50px;">
+                                <div class="col-sm-12">
                                     <form id="create" method="POST">
                                         <div class="card border-light mb-3">
                                             <div class="card-header">
@@ -92,16 +53,60 @@
                                         </div>
 
                                         <div class="text-right">
-                                            <button type="reset">Reset</button>
+                                            <!-- <button type="button" id="reset">Reset</button> -->
                                             <button type="submit">Submit</button>
                                         </div>
                                     </form>
                                 </div>
+
+                                <div class="col-sm-12" style="margin-top: 50px;">
+                                    <form id="search_field" method="POST">
+
+                                        <div class="col-sm-3">
+                                            <input type="text" name="Kode" class="form-control search" placeholder="Search Kode...">
+                                        </div>
+
+                                        <div class="col-sm-3">
+                                            <input type="text" name="Name" class="form-control search" placeholder="Search Name...">
+                                        </div>
+
+                                        <div class="col-sm-3">
+                                            <input name="Date" class="datepicker form-control" data-date-format="dd/mm/yyyy" placeholder="Search by date...d/m/Y" >
+                                        </div>
+
+                                        <div class="col-sm-3">
+                                            <input type="text" name="Total" class="form-control search total text-right" placeholder="Search Total...">
+                                        </div>
+
+                                        <button style="float: right; margin-right: 17px;" type="submit" class="btn btn-sm btn-gray">Search</button>
+                                        <button type="button" class="btn btn-sm btn-gray" style="float: right; margin-right: 17px" id="reset-form">
+                                            Reset
+                                        </button>
+                                        <!-- <button type="button" class="btn btn-primary" id="test"></button> -->
+                                    </form>
+                                </div>
+
+                                <div class="col-sm-12" style="margin-top: 100px;">
+                                    <div class="table table-responsive">
+                                        <table class="table table-responsive table-hover" style="margin-top: 50px;" id="table">
+                                            <thead>
+                                             <tr>
+                                                 <th>Kode</th>
+                                                 <th>Name</th>
+                                                 <th>Date</th>
+                                                 <th>Total</th>
+                                                 <th>Action</th>
+                                             </tr>
+                                            </thead>
+
+                                         </table>
+                                    </div>
+                                </div>
+
                             </div>
 
 
                         </div>
-                    </div>
                 </div>
 			</div>
 
@@ -120,11 +125,70 @@
     var i = 0;
 
     $(document).ready(function () {
+        const formatCur = {mDec:0 , aSep:'.', aDec:',', asign:"Rp."};
+        $('.total').autoNumeric('init', formatCur);
 
+        // set datepicker
         $('.datepicker').datepicker({
             setDate: new Date(),
             autoclose: true
             // startDate: '-3d',
+        });
+
+        //Search
+        $("#search_field").submit(function(evt, ui)
+        {
+            evt.preventDefault();
+            params = $(this).serialize();
+
+            table.ajax.reload();
+        });
+        //end Search
+
+        $('#reset-form').click(function(){
+            $('#search_field').trigger('reset');
+            $('#search_field').trigger('submit');
+        })
+
+        // reset
+        $('#reset').click(function(e){
+
+            const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to reset this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, reset it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                    'reset!',
+                    'form create has been reset',
+                    'success'
+                    );
+
+                    $('#create').trigger('reset');
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                    'Cancelled',
+                    'Your imaginary file is safe :)',
+                    'error'
+                    )
+                }
+            });
         });
 
 
