@@ -1,6 +1,7 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
 
 class Transaction extends DataObject {
 
@@ -16,4 +17,8 @@ class Transaction extends DataObject {
     private static $has_many = [
         'TransactionDetail' => TransactionDetail::class
     ];
+
+    // function getDetail($id){
+    //     return DB::query("SELECT * FROM TransactionDetail where 'Delete' = 0 AND 'TransactionID' = ".$id."");
+    // }
 }

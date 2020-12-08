@@ -4,73 +4,44 @@
 		<div class="row">
             <div id="baseUrl" data-url="{$BaseHref}transaction/"></div>
 
-            <!-- BEGIN MAIN CONTENT -->
+            <%-- BEGIN MAIN CONTENT --%>
 
             <div class="main col-sm">
                 <div class="card">
                     <div class="card-body">
                         <div class="row" style="margin-top: 50px;">
-                            <form id="search_field" method="POST">
-
-                                <div class="col-sm-4">
-                                    <input type="text" name="Name" class="form-control search" placeholder="Search Name...">
-                                </div>
-
-                                <div class="col-sm-4">
-                                    <input type="text" name="Address"  class="form-control search" placeholder="Search Address...">
-                                </div>
-
-                                <div class="col-sm-4">
-                                    <input type="text" name="Phone" class="form-control search" placeholder="Search Phone...">
-                                </div>
-
-                                <button style="float: right; margin-right: 17px;" type="submit" class="btn btn-sm btn-gray">Search</button>
-                                <button type="button" class="btn btn-sm btn-gray" style="float: right; margin-right: 17px" id="reset-form">
-                                    Reset
-                                </button>
-                                <!-- <button type="button" class="btn btn-primary" id="test"></button> -->
-                            </form>
-
                             <div class="row">
-                                <div class="col-sm-8">
-                                    <div class="table table-responsive">
-                                        <table class="table table-responsive table-hover" style="margin-top: 50px;" id="table">
-                                            <thead>
-                                             <tr>
-                                                 <th>Kode</th>
-                                                 <th>Name</th>
-                                                 <th>Date</th>
-                                                 <th>Total</th>
-                                                 <th>Action</th>
-                                             </tr>
-                                            </thead>
 
-                                         </table>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-4" style="margin-top: 50px;">
-                                    <form id="create" method="POST">
+                                <div class="col-sm-12" style="margin-top: 50px;">
+                                    <label for="Edit">Edit</label>
+                                    <br><br>
+                                    <form id="edit" method="POST">
                                         <div class="card border-light mb-3">
                                             <div class="card-header">
-                                                Create
+
                                             </div>
                                             <div class="card-body">
+                                                <input type="hidden" name="id" id="" value="$transaction.ID">
+                                                <div class="form-group">
+                                                    <label for="">Kode</label>
+                                                    <input type="text" value="$transaction.Kode" readonly class="form-control">
+                                                </div>
                                                 <div class="form-group">
                                                     <label for="">Name</label>
-                                                    <input type="text" name="Name" class="form-control">
+                                                    <input type="text" name="Name" class="form-control" value="$transaction.Name">
                                                 </div>
 
                                                 <div class="form-group datepicker_wrapper">
                                                     <label for="">Date</label>
-                                                    <input name="Date" class="datepicker form-control" value="$getDate" data-date-format="dd/mm/yyyy">
+                                                    <input name="Date" class="datepicker form-control" value="$date" data-date-format="dd/mm/yyyy">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="">Description</label>
-                                                    <textarea name="Description" class="form-control" rows="5"></textarea>
+                                                    <textarea name="Description" class="form-control" rows="5">$transaction.Description</textarea>
                                                 </div>
                                             </div>
                                         </div>
+
 
                                         <div class="card">
                                             <div class="card-header text-right" style="margin-bottom: 30px;">
@@ -78,6 +49,31 @@
                                             </div>
 
                                             <div class="card-body" id="detail">
+                                                <% loop $detail %>
+                                                <div class="row">
+                                                    <div class="col-sm-3">
+                                                        <select name="detail[$ID][ProductID]" class="form-control product">
+                                                            $Top.renderProduct($ID)
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="col-sm-2">
+                                                        <input type="text" name="detail[$ID][Qty]" placeholder="Qty" value="$Qty" class="form-control text-right qty">
+                                                    </div>
+
+                                                    <div class="col-sm-3">
+                                                        <input type="text" name="detail[$ID][Price]" readonly value="$Price" class="form-control price text-right" placeholder="Price">
+                                                    </div>
+
+                                                    <div class="col-sm-3">
+                                                        <input type="text" name="detail[$ID][Subtotal]" readonly value="$Subtotal" class="form-control text-right subtotal" placeholder="Subtotal">
+                                                    </div>
+
+                                                    <div class="col-sm-1">
+                                                        <button type="button" class="deleteDetail btn btn-danger">Delete</button>
+                                                    </div>
+                                                </div>
+                                            <% end_loop %>
                                             </div>
                                             <div class="card-footer">
                                                 <div class="row">
@@ -85,14 +81,15 @@
                                                         <label for="">Total : </label>
                                                     </div>
                                                     <div class="col-sm-3">
-                                                        <input type="text" readonly name="Total" class="form-control text-right" id="total">
+                                                        <input type="text" readonly name="Total" value="$transaction.Total" class="form-control text-right" id="total">
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
 
+
                                         <div class="text-right">
-                                            <button type="reset">Reset</button>
+                                            <button type="button" id="back">Back</button>
                                             <button type="submit">Submit</button>
                                         </div>
                                     </form>
@@ -108,21 +105,75 @@
 		</div>
 	</div>
 </div>
-
 <script>
     var params = [];
     var table;
     var sorting = [];
     let url = $("#baseUrl").data('url');
 
-    // $(document).find('.date').datepicker({dateFormat : 'yy-mm-dd'});
-
     var i = 0;
 
     $(document).ready(function () {
 
+        $('#back').click(function (e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Do you want to save the changes?',
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: `Save`,
+                denyButtonText: `Don't save`,
+                }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    update();
+                    // Swal.fire('Saved!', '', 'success');
+                    window.location.href = url;
+                } else if (result.isDenied) {
+
+                    Swal.fire('Changes are not saved', '', 'info');
+                    window.location.href = url;
+                }
+
+
+            });
+
+        });
+
+        const formatCur = {mDec:0 , aSep:'.', aDec:',', asign:"Rp."};
+            $('.qty').autoNumeric('init', formatCur);
+            $('.subtotal').autoNumeric('init', formatCur);
+            $('.price').autoNumeric('init', formatCur);
+            $('#total').autoNumeric('init', formatCur);
+
+            i++;
+
+            $('.qty').keyup(function (e) {
+                subtotal($(this));
+            });
+
+            $('.product').change(function (e) {
+                e.preventDefault();
+                var id = $(this).val();
+                let price = $(this).parent().parent().find('.price');
+                let here = $(this);
+                price.autoNumeric('init',formatCur);
+
+                $.ajax({
+                    type: "get",
+                    url: url+'getPrice',
+                    data: {'id' : id},
+                    dataType: "json",
+                    success: function (response) {
+                        price.val(response.data.Price);
+                        subtotal(here);
+                    }
+                });
+
+            });
+
         $('.datepicker').datepicker({
-            setDate: new Date(),
             autoclose: true
             // startDate: '-3d',
         });
@@ -163,8 +214,6 @@
                             response.message,
                             'success'
                             );
-
-                            table.ajax.reload()
                         }
                     });
 
@@ -181,27 +230,10 @@
             });
         });
 
-        $('#create').submit(function (e) {
+        $('#edit').submit(function (e) {
             e.preventDefault();
 
-            $.ajax({
-                type: "post",
-                url: url+'store',
-                data: new FormData(this),
-                dataType: "json",
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    Swal.fire(
-                        'Saved',
-                        response.message,
-                        'success'
-                    );
-                    $(this).trigger('reset');
-
-                    table.ajax.reload()
-                }
-            });
+            update(this);
         });
 
         //Add detail
@@ -231,15 +263,10 @@
                     </div>
 
                     <div class="col-sm-1">
-                        <button type="button" class="deleteDetail btn btn-danger"></button>
+                        <button type="button" class="deleteDetail btn btn-danger">Delete</button>
                     </div>
                 </div>`
             );
-            const formatCur = {mDec:0 , aSep:'.', aDec:',', asign:"Rp."};
-            $('.qty').autoNumeric('init', formatCur);
-            $('.subtotal').autoNumeric('init', formatCur);
-
-            i++;
 
             $('.qty').keyup(function (e) {
                 subtotal($(this));
@@ -262,8 +289,8 @@
                         subtotal(here);
                     }
                 });
-
             });
+
         });
 
         $(document).on('click', '.deleteDetail', function(){
@@ -308,56 +335,6 @@
             }
             });
         });
-
-        //DataTable
-        table = $('#table').DataTable({
-            "responsive": true,
-            "processing" : true,
-            "serverSide" : true,
-            "paging" : true,
-            "searching" : false,
-            "ordering" : true,
-            'language':{
-                    "decimal":        "",
-                    "emptyTable":     "Tidak ada data di dalam table",
-                    "info":           "Menampilkan _START_ - _END_ dari total _TOTAL_ data pada kolom _PAGE_ dari _PAGES_ kolom ",
-                    "infoEmpty":      "Data tidak ditemukan",
-                    "infoFiltered":   "(Mencari dari _MAX_ total data)",
-                    "infoPostFix":    "",
-                    "thousands":      ",",
-                    "lengthMenu":     "Menampilkan _MENU_ data",
-                    "loadingRecords": "Loading...",
-                    "processing":     "Processing...",
-                    "search":         "Cari:",
-                    "zeroRecords":    "Tidak ada data yang ditemukan",
-                    "paginate": {
-                        "first":      "Pertama",
-                        "last":       "Terakhir",
-                        "next":       ">",
-                        "previous":   "<"
-                    },
-                    "aria": {
-                        "sortAscending":  ": activate to sort column ascending",
-                        "sortDescending": ": activate to sort column descending"
-                    }
-                },
-                "order": [[ 0, 'asc' ]],
-                "ajax" : {
-                    "url" : url+"getData",
-                    data : function(d){
-                        d.filter_record = params,
-                        d.sorting = sorting
-                    }
-                },
-
-                "columnDefs": [ {
-                    // "searchable": true,
-                    "orderable": false,
-                    "targets": [4],
-                } ],
-                "deferRender" : true,
-        });
-
     });
 
     // to count subtotal
@@ -390,6 +367,25 @@
     //make format Number
     function formatNumber(number){
         return number.toLocaleString('de-DE');
+    }
+
+    function update(param){
+        $.ajax({
+            type: "post",
+            url: url+'update',
+            data: new FormData(param),
+            dataType: "json",
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                Swal.fire(
+                    'Saved',
+                    response.message,
+                    'success'
+                );
+                // $(this).trigger('reset');
+            }
+        });
     }
 
 </script>

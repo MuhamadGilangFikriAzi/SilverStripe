@@ -8,10 +8,12 @@ class TransactionDetail extends DataObject{
         'Qty' => 'Int',
         'Price' => 'Double',
         'Subtotal' => 'Double',
+        'Delete' => 'Int'
     ];
 
     private static $has_one = [
         'Transaction' => Transaction::class,
         'Product' => Product::class,
     ];
+
 }
