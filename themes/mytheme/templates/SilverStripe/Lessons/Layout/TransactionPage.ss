@@ -103,9 +103,44 @@
                                     </div>
                                 </div>
 
+                                <div class="col-sm-12" style="margin-top: 50px;">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            Send Notif
+                                        </div>
+                                        <div class="card-body">
+                                            <form method="POST" id="sendNotif">
+                                                <div class="form-group">
+                                                    <label for="">Type</label>
+                                                    <select name="type" class="form-control">
+                                                        <option value="">-- select type --</option>
+                                                        <option value="Email">Email</option>
+                                                        <option value="WA">WA</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="fomr-group">
+                                                    <label for="">Recipient</label>
+                                                    <input type="text" name="recipient" class="form-control">
+                                                </div>
+
+                                                <div class="fomr-group">
+                                                    <label for="">Subject</label>
+                                                    <input type="text" name="subject" class="form-control">
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="">Message</label>
+                                                    <input type="text" name="Message" class="form-control">
+                                                </div>
+
+                                                <button type="button">Reset</button>
+                                                <button type="submit">Submit</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-
-
                         </div>
                 </div>
 			</div>
@@ -115,17 +150,14 @@
 </div>
 
 <script>
-    var params = [];
-    var table;
-    var sorting = [];
+    var params = [],
+        table,
+        sorting = [],
+        i = 0;
     let url = $("#baseUrl").data('url');
-
-    // $(document).find('.date').datepicker({dateFormat : 'yy-mm-dd'});
-
-    var i = 0;
+    const formatCur = {mDec:0 , aSep:'.', aDec:',', asign:"Rp.", vMin: '0.00'};
 
     $(document).ready(function () {
-        const formatCur = {mDec:0 , aSep:'.', aDec:',', asign:"Rp."};
         $('.total').autoNumeric('init', formatCur);
 
         // set datepicker
@@ -133,6 +165,29 @@
             setDate: new Date(),
             autoclose: true
             // startDate: '-3d',
+        });
+
+        // Send Notif
+        $('#sendNotif').submit(function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: url+'sendNotif',
+                data: new FormData(this),
+                dataType: "json",
+                processData: false,
+                contentType : false,
+                success: function (response) {
+                    Swal.fire(
+                        'Saved',
+                        response.message,
+                        'success'
+                    );
+
+                    $('#sendNotif').trigger('reset');
+                }
+            });
         });
 
         //Search
@@ -272,6 +327,13 @@
         $(document).on('click','#addDetail', function(){
 
             $('#detail').append(`
+            <div>
+                <div class="row">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-2">
+                        <span class="text-right kuantitas"></span>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-sm-3">
                         <select name="detail[${i}][ProductID]" class="form-control product">
@@ -297,9 +359,9 @@
                     <div class="col-sm-1">
                         <button type="button" class="deleteDetail btn btn-danger"></button>
                     </div>
-                </div>`
+                </div>
+            </div>`
             );
-            const formatCur = {mDec:0 , aSep:'.', aDec:',', asign:"Rp."};
             $('.qty').autoNumeric('init', formatCur);
             $('.subtotal').autoNumeric('init', formatCur);
 
@@ -311,9 +373,10 @@
 
             $('.product').change(function (e) {
                 e.preventDefault();
-                var id = $(this).val();
-                let price = $(this).parent().parent().find('.price');
-                let here = $(this);
+                var id = $(this).val(),
+                    price = $(this).parent().parent().find('.price'),
+                    here = $(this),
+                    kuantitas = $(this).parent().parent().parent().find('.kuantitas');
                 price.autoNumeric('init',formatCur);
 
                 $.ajax({
@@ -322,7 +385,9 @@
                     data: {'id' : id},
                     dataType: "json",
                     success: function (response) {
+                        console.log(response.data);
                         price.val(response.data.Price);
+                        kuantitas.text('remaining quantity left : '+response.data.Qty);
                         subtotal(here);
                     }
                 });
@@ -361,7 +426,6 @@
                 total();
 
             } else if (
-                /* Read more about handling dismissals below */
                 result.dismiss === Swal.DismissReason.cancel
             ) {
                 swalWithBootstrapButtons.fire(
@@ -405,7 +469,7 @@
                         "sortDescending": ": activate to sort column descending"
                     }
                 },
-                "order": [[ 0, 'asc' ]],
+                "order": [[ 2, 'desc' ]],
                 "ajax" : {
                     "url" : url+"getData",
                     data : function(d){
@@ -428,10 +492,10 @@
     function subtotal(data){
         const formatCur = {mDec:0 , aSep:'.', aDec:',', asign:"Rp."};
 
-        var parent = data.parent().parent();
-        var qty = parent.find('.qty').val().split('.').join('');
-        var price = parent.find('.price').val().split('.').join('');
-        var subtotal = Number(qty) * Number(price);
+        var parent = data.parent().parent(),
+            qty = parent.find('.qty').val().split('.').join(''),
+            price = parent.find('.price').val().split('.').join(''),
+            subtotal = Number(qty) * Number(price);
 
         // console.log(subtotal.toLocaleString('de-DE'));
         parent.find('.subtotal').val(formatNumber(subtotal));

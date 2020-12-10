@@ -21,13 +21,13 @@ class MGNotif{
             'SendVia' => 'Wa',
             'Subject' => $subject,
             'Message' => $content,
-            'InstenceID' => 20
+            'InstanceID' => 20
         ];
 
         return self::generatePost($data);
     }
 
-    static function sendEmail($content, $recipient, $subject = "Approval Baru"){
+    static function sendEmail($content, $recipient, $subject = "Test Email"){
         $siteconfig = SiteConfig::current_site_config();
 
         $data = [
@@ -36,8 +36,9 @@ class MGNotif{
             'SendVia' => 'Email',
             'Subject' => $subject,
             'Message' => $content,
-            'InstenceID' => 3
+            'InstanceID' => 3
         ];
+
 
         return self::generatePost($data);
     }
@@ -52,7 +53,7 @@ class MGNotif{
         ],
         ]);
 
-        $result = file_get_contents("http://mgbix.id:82/mgnotifv2/api/storeNotif", false, $option);
+        $result = file_get_contents("http://mgbix.id:82/mgnotifv2/api/storeNotif", true, $option);
 
         return $result;
     }

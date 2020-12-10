@@ -18,7 +18,4 @@ class Transaction extends DataObject {
         'TransactionDetail' => TransactionDetail::class
     ];
 
-    // function getDetail($id){
-    //     return DB::query("SELECT * FROM TransactionDetail where 'Delete' = 0 AND 'TransactionID' = ".$id."");
-    // }
 }

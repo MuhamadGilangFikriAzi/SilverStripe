@@ -106,18 +106,17 @@
 	</div>
 </div>
 <script>
-    var params = [];
-    var table;
-    var sorting = [];
+    var params = [],
+        table,
+        sorting = [],
+        i = 0;
     let url = $("#baseUrl").data('url');
-
-    var i = 0;
+    const formatCur = {mDec:0 , aSep:'.', aDec:',', asign:"Rp.", vMin: '0.00'};
 
     $(document).ready(function () {
 
         $('#back').click(function (e) {
             e.preventDefault();
-
             Swal.fire({
                 title: 'Do you want to save the changes?',
                 showDenyButton: true,
@@ -125,28 +124,21 @@
                 confirmButtonText: `Save`,
                 denyButtonText: `Don't save`,
                 }).then((result) => {
-                /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
-                    update();
-                    // Swal.fire('Saved!', '', 'success');
+                    $('#edit').trigger('submit');
                     window.location.href = url;
                 } else if (result.isDenied) {
-
                     Swal.fire('Changes are not saved', '', 'info');
                     window.location.href = url;
                 }
-
-
             });
 
         });
 
-        const formatCur = {mDec:0 , aSep:'.', aDec:',', asign:"Rp."};
             $('.qty').autoNumeric('init', formatCur);
             $('.subtotal').autoNumeric('init', formatCur);
             $('.price').autoNumeric('init', formatCur);
             $('#total').autoNumeric('init', formatCur);
-
             i++;
 
             $('.qty').keyup(function (e) {
@@ -156,8 +148,8 @@
             $('.product').change(function (e) {
                 e.preventDefault();
                 var id = $(this).val();
-                let price = $(this).parent().parent().find('.price');
-                let here = $(this);
+                let price = $(this).parent().parent().find('.price'),
+                    here = $(this);
                 price.autoNumeric('init',formatCur);
 
                 $.ajax({
@@ -175,15 +167,14 @@
 
         $('.datepicker').datepicker({
             autoclose: true
-            // startDate: '-3d',
         });
 
 
         //Delete
         $(document).on('click','.delete', function(){
-            // e.preventDefault();
-            var id = $(this).data('id');
-            var deleteURL = url+'delete';
+            e.preventDefault();
+            var id = $(this).data('id'),
+                deleteURL = url+'delete';
 
             const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
@@ -275,8 +266,8 @@
             $('.product').change(function (e) {
                 e.preventDefault();
                 var id = $(this).val();
-                let price = $(this).parent().parent().find('.price');
-                let here = $(this);
+                let price = $(this).parent().parent().find('.price'),
+                    here = $(this);
                 price.autoNumeric('init',formatCur);
 
                 $.ajax({
@@ -339,16 +330,11 @@
 
     // to count subtotal
     function subtotal(data){
-        const formatCur = {mDec:0 , aSep:'.', aDec:',', asign:"Rp."};
-
-        var parent = data.parent().parent();
-        var qty = parent.find('.qty').val().split('.').join('');
-        var price = parent.find('.price').val().split('.').join('');
-        var subtotal = Number(qty) * Number(price);
-
-        // console.log(subtotal.toLocaleString('de-DE'));
+        var parent = data.parent().parent(),
+            qty = parent.find('.qty').val().split('.').join(''),
+            price = parent.find('.price').val().split('.').join(''),
+            subtotal = Number(qty) * Number(price);
         parent.find('.subtotal').val(formatNumber(subtotal));
-
         total();
     }
 
@@ -357,10 +343,8 @@
         let subtotal = document.querySelectorAll('.subtotal');
         var total = 0;
         subtotal.forEach(element => {
-
             total += Number(element.value.split('.').join(''));
         });
-
         document.querySelector('#total').value = formatNumber(total);
     }
 
@@ -379,11 +363,10 @@
             contentType: false,
             success: function (response) {
                 Swal.fire(
-                    'Saved',
-                    response.message,
+                    'Updated!',
+                    'You data has been updated!',
                     'success'
-                );
-                // $(this).trigger('reset');
+                )
             }
         });
     }

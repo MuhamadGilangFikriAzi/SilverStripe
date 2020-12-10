@@ -31,3 +31,7 @@ SilverStripe\Core\Injector\Injector:
 SilverStripe\SiteConfig\SiteConfig:
   extensions:
     - SilverStripe\Lessons\SiteConfigExtension
+
+SilverStripe\Admin\LeftAdmin:
+  extra_requeirements_javascript:
+    - app\js\product.js

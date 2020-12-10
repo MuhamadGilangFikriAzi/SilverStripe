@@ -62,8 +62,7 @@ class ArticlePage extends Page{
 
         $fields->addFieldsToTab('Root.Main', DropdownField::create(
             'RegionID',
-
-           'Region',
+            'Region',
             Region::get()->map('ID', 'Title')
         )->setEmptyString('-- None --'), 'Content');
 
