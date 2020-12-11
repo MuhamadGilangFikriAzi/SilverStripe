@@ -30,6 +30,11 @@
                                                     <label for="">Description</label>
                                                     <textarea name="Description" class="form-control" rows="5"></textarea>
                                                 </div>
+
+                                                <!-- <div class="form-group">
+                                                    <label for="">Price</label>
+                                                    <input type="text" name="" id="test" class="form-control">
+                                                </div> -->
                                             </div>
                                         </div>
 
@@ -153,13 +158,15 @@
     var params = [],
         table,
         sorting = [],
+        currency = "Rp",
         i = 0;
     let url = $("#baseUrl").data('url');
-    const formatCur = {mDec:0 , aSep:'.', aDec:',', asign:"Rp.", vMin: '0.00'};
+    const formatCur = {mDec:0 , aSep:'.', aDec:',', aSign:currency, vMin: '0.00'};
+    const formatQty = {mDec:0 , aSep:'.', aDec:',', vMin: '0.00'};
 
     $(document).ready(function () {
         $('.total').autoNumeric('init', formatCur);
-
+        $('#test').autoNumeric('init', formatCur);
         // set datepicker
         $('.datepicker').datepicker({
             setDate: new Date(),
@@ -336,7 +343,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-3">
-                        <select name="detail[${i}][ProductID]" class="form-control product">
+                        <select name="detail[${i}][ProductID]" class="form-control product selectpicker">
                             <option value="0">...</option>
                             <% loop $getProduct %>
                                 <option value="$ID">$Name</option>
@@ -357,12 +364,17 @@
                     </div>
 
                     <div class="col-sm-1">
-                        <button type="button" class="deleteDetail btn btn-danger"></button>
+                        <button type="button" class="deleteDetail btn btn-danger">Delete</button>
                     </div>
                 </div>
             </div>`
             );
-            $('.qty').autoNumeric('init', formatCur);
+
+            //Select 2
+            $('select').selectpicker('refresh');
+            // End Select2
+
+            $('.qty').autoNumeric('init', formatQty);
             $('.subtotal').autoNumeric('init', formatCur);
 
             i++;
@@ -490,15 +502,14 @@
 
     // to count subtotal
     function subtotal(data){
-        const formatCur = {mDec:0 , aSep:'.', aDec:',', asign:"Rp."};
-
         var parent = data.parent().parent(),
             qty = parent.find('.qty').val().split('.').join(''),
-            price = parent.find('.price').val().split('.').join(''),
+            price = parent.find('.price').val().split('.').join('').replace('Rp',''),
             subtotal = Number(qty) * Number(price);
 
-        // console.log(subtotal.toLocaleString('de-DE'));
-        parent.find('.subtotal').val(formatNumber(subtotal));
+            console.log(qty);
+            console.log(price);
+        parent.find('.subtotal').val(currency+formatNumber(subtotal));
 
         total();
     }
@@ -508,11 +519,10 @@
         let subtotal = document.querySelectorAll('.subtotal');
         var total = 0;
         subtotal.forEach(element => {
-
-            total += Number(element.value.split('.').join(''));
+            total += Number(element.value.split('.').join('').replace('Rp',''));
         });
 
-        document.querySelector('#total').value = formatNumber(total);
+        document.querySelector('#total').value = currency+formatNumber(total);
     }
 
     //make format Number

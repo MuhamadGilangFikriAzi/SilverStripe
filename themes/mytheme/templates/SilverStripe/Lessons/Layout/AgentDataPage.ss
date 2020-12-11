@@ -227,7 +227,7 @@
         // end format number
 
         //Select 2
-        $('select').selectpicker();
+        $('select').selectpicker('refresh');
         // End Select2
 
         // Reset button
@@ -489,7 +489,7 @@
                         "sortDescending": ": activate to sort column descending"
                     }
                 },
-                "order": [[ 1, 'asc' ]],
+                "order": [[ 1, 'asc' ]],actionsBox,
                 "ajax" : {
                     "url" : url+"getData",
                     data : function(d){

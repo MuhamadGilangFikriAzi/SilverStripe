@@ -31,11 +31,13 @@ class TransactionPageController extends PageController
 
     private function formatNumber($number)
     {
-        return number_format($number, 0, ",", ".");
+
+        return "Rp".number_format($number, 0, ",", ".");
     }
 
     private function reverseFormat($number)
     {
+        $number  = str_replace('Rp', '', $number);
         return str_replace('.', '', $number);
     }
 
@@ -76,27 +78,29 @@ class TransactionPageController extends PageController
         return json_encode($data);
     }
 
-    public function store()
-    {
-        $request = $_REQUEST;
-
-        // set date
-        $date = date('Y-m-d', strtotime(str_replace('/', '-', $request['Date'])));
-        $detail = $request['detail'];
-        unset($request['detail']);
-
-        //set code
+    private function getFormatCode(){
         $lastCode = Transaction::get()->last();
         $number = ($lastCode->Kode != null) ? str_replace('T-', '', $lastCode->Kode) + 1 : 1;
         $code = 'T-' . $number;
 
-        $request['Kode'] = $code;
-        $request['Date'] = $date;
+        return $code;
+    }
+
+    public function store()
+    {
+        $request = $_REQUEST;
+
+        // set detail
+        $detail = $request['detail'];
+        unset($request['detail']);
+
+        $request['Kode'] = $this->getFormatCode();
+        $request['Date'] = $this->reverseDate($request['Data']);
         $request['Total'] = $this->reverseFormat($request['Total']);
 
-        $idTransaction = Transaction::create($request)->write();
-        $transaction = Transaction::get_by_id($idTransaction);
-
+        // $idTransaction = Transaction::create($request)->write();
+        // $transaction = Transaction::get_by_id($idTransaction);
+        print_r($request);
         foreach ($detail as $value) {
             $value['Price'] = $this->reverseFormat($value['Price']);
             $value['Subtotal'] = $this->reverseFormat($value['Subtotal']);
@@ -107,7 +111,9 @@ class TransactionPageController extends PageController
 
             $product = Product::get_by_id($value['ProductID']);
             $product->Qty = $product->Qty - $this->reverseFormat($value['Qty']);
-            $product->write();
+            // $product->write();
+
+            print_r($value);die();
         }
 
         $data = [
