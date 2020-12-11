@@ -5,6 +5,7 @@ namespace SilverStripe\Lessons;
 use MGNotif;
 use PageController;
 use Product;
+use PropertyData;
 use SilverStripe\Control\Director;
 use Transaction;
 use TransactionDetail;
@@ -22,7 +23,9 @@ class TransactionPageController extends PageController
         'editPage',
         'update',
         'renderProduct',
+        'renderFilterProduct',
         'sendNotif',
+        'renderPropertyData',
     ];
 
     private static $casting = [
@@ -98,8 +101,8 @@ class TransactionPageController extends PageController
         $request['Date'] = $this->reverseDate($request['Data']);
         $request['Total'] = $this->reverseFormat($request['Total']);
 
-        // $idTransaction = Transaction::create($request)->write();
-        // $transaction = Transaction::get_by_id($idTransaction);
+        $idTransaction = Transaction::create($request)->write();
+        $transaction = Transaction::get_by_id($idTransaction);
         print_r($request);
         foreach ($detail as $value) {
             $value['Price'] = $this->reverseFormat($value['Price']);
@@ -111,9 +114,7 @@ class TransactionPageController extends PageController
 
             $product = Product::get_by_id($value['ProductID']);
             $product->Qty = $product->Qty - $this->reverseFormat($value['Qty']);
-            // $product->write();
-
-            print_r($value);die();
+            $product->write();
         }
 
         $data = [
@@ -281,11 +282,34 @@ class TransactionPageController extends PageController
         return json_encode($data);
     }
 
-    public function renderProduct($id)
+    public function renderPropertyData()
     {
-        $detail = TransactionDetail::get_by_id($id)->ProductID;
         $product = Product::get();
+            $option = "<option value=''>-- Pilih Product --</option>";
+
+        foreach ($product as $value) {
+            $option .= "<option value='{$value->ID}'>{$value->Name}</option>";
+
+        }
+
+        return $option;
+    }
+
+    public function renderProduct($id = 0)
+    {
+        $detail = 0;
+        if($id != 0){
+            $detail = TransactionDetail::get_by_id($id)->ProductID;
+        }
+
+        $product = Product::get();
+        if($_REQUEST['param']){
+            $product = $product->where("Name Like '%".$_REQUEST['param']."%'");
+        }
         $option = "<option value=''>-- Pilih Product --</option>";
+
+
+
         foreach ($product as $value) {
             if ($value->ID == $detail) {
                 $option .= "<option value='{$value->ID}' selected>{$value->Name}</option>";
@@ -295,6 +319,41 @@ class TransactionPageController extends PageController
         }
 
         return $option;
+    }
+
+    public function renderFilterProduct()
+    {
+        // print_r($_REQUEST['param']);die();
+        $detail = 0;
+        $product = Product::get();
+        if($_REQUEST['param']){
+            $product = $product->where("Name Like '%".$_REQUEST['param']."%'");
+        }
+
+        $option = "<option value=''>-- Pilih Product --</option>";
+        $count = $product->count();
+        if($count != 0){
+            foreach ($product as $value) {
+                if ($value->ID == $detail) {
+                    $option .= "<option value='{$value->ID}' selected>{$value->Name}</option>";
+                } else {
+                    $option .= "<option value='{$value->ID}'>{$value->Name}</option>";
+                }
+            }
+        }else{
+            $option = "<option value=''>-- tidak ada data --</option>";
+        }
+
+        $data = [
+            'status' => 200,
+            'message' => '',
+            'data' => [
+                'option' => $option,
+                'count' => $count
+            ]
+        ];
+
+        return json_encode($data);
     }
 
     public function sendNotif()

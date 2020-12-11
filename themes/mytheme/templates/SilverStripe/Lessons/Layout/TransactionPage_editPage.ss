@@ -109,6 +109,7 @@
     var params = [],
         table,
         sorting = [],
+        currency = "Rp",
         i = 0;
     let url = $("#baseUrl").data('url');
     const formatCur = {mDec:0 , aSep:'.', aDec:',', asign:"Rp.", vMin: '0.00'};
@@ -328,13 +329,14 @@
         });
     });
 
-    // to count subtotal
     function subtotal(data){
         var parent = data.parent().parent(),
             qty = parent.find('.qty').val().split('.').join(''),
-            price = parent.find('.price').val().split('.').join(''),
+            price = parent.find('.price').val().split('.').join('').replace('Rp',''),
             subtotal = Number(qty) * Number(price);
-        parent.find('.subtotal').val(formatNumber(subtotal));
+
+        parent.find('.subtotal').val(currency+formatNumber(subtotal));
+
         total();
     }
 
@@ -343,9 +345,10 @@
         let subtotal = document.querySelectorAll('.subtotal');
         var total = 0;
         subtotal.forEach(element => {
-            total += Number(element.value.split('.').join(''));
+            total += Number(element.value.split('.').join('').replace('Rp',''));
         });
-        document.querySelector('#total').value = formatNumber(total);
+
+        document.querySelector('#total').value = currency+formatNumber(total);
     }
 
     //make format Number

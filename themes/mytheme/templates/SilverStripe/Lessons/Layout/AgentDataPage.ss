@@ -24,6 +24,13 @@
                                     <input type="text" name="Phone" class="form-control search" placeholder="Search Phone...">
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="">select</label>
+                                    <select name="" id="test" class="form-control">
+                                        $renderPropertyData
+                                    </select>
+                                </div>
+
                                 <button type="button" class="btn btn-sm btn-gray" style="margin-left: 13px;" data-toggle="modal" data-target="#addModal">
                                     Add
                                 </button>
@@ -93,7 +100,7 @@
                 <div class="form-group">
 
                     <label for="">PropertyData <span class="text-danger">*</span></label>
-                    <select name="PropertyDataID" data-live-search="true" class="form-control selectpicker" data-style="" required id="addProperty">
+                    <select name="PropertyDataID" data-live-search="true" class="form-control selectpicker" data-live-search="true" data-style="" required id="addProperty">
                         <option value="">-- Property Data --</option>
                         <% loop $getPropertyData %>
                             <option value="$ID">$Address</option>
@@ -217,6 +224,12 @@
 
 
     $(document).ready(function () {
+
+        $('input[type=search]').on('keyup', function(e){
+            e.preventDefault();
+
+            console.log(this);
+        });
 
         let url = $("#baseUrl").data("url");
         let param_asal = 1;

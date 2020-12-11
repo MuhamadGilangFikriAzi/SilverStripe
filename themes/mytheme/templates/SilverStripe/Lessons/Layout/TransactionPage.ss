@@ -1,3 +1,10 @@
+<style>
+    .filter-option-inner-inner{
+        border-color: black !important;
+    }
+
+</style>
+
 <div class="content">
     $Content
 	<div class="container">
@@ -31,9 +38,15 @@
                                                     <textarea name="Description" class="form-control" rows="5"></textarea>
                                                 </div>
 
+                                                <div class="form-group">
+                                                    <select name="test" class="form-control selectpicker" data-live-search="true">
+
+                                                    </select>
+                                                </div>
+
                                                 <!-- <div class="form-group">
-                                                    <label for="">Price</label>
-                                                    <input type="text" name="" id="test" class="form-control">
+                                                    <label for="">Pass</label>
+                                                    <input type="password" class="form-control" required minlength="8"/>
                                                 </div> -->
                                             </div>
                                         </div>
@@ -165,6 +178,40 @@
     const formatQty = {mDec:0 , aSep:'.', aDec:',', vMin: '0.00'};
 
     $(document).ready(function () {
+
+        $('select').selectpicker();
+        $('input[type=search]').keyup(debounce(function(e){
+            e.preventDefault();
+            let select = $('select[name=test]');
+            console.log(select.children().remove());
+            var param = $(this).val();
+            $.ajax({
+                type: "get",
+                url: url+'renderFilterProduct',
+                data: {'param' : param},
+                dataType: "json",
+                success: function (response) {
+                    select.append(response.data.option).selectpicker('refresh');
+                }
+            });
+        },500));
+
+        //debounce
+        function debounce(func, wait, immediate) {
+            var timeout;
+            return function() {
+                var context = this, args = arguments;
+                var later = function() {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                var callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            };
+        };
+
         $('.total').autoNumeric('init', formatCur);
         $('#test').autoNumeric('init', formatCur);
         // set datepicker
@@ -307,6 +354,7 @@
             });
         });
 
+        //Submit create
         $('#create').submit(function (e) {
             e.preventDefault();
 
@@ -343,7 +391,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-3">
-                        <select name="detail[${i}][ProductID]" class="form-control product selectpicker">
+                        <select name="detail[${i}][ProductID]" class="form-control product">
                             <option value="0">...</option>
                             <% loop $getProduct %>
                                 <option value="$ID">$Name</option>
@@ -369,10 +417,6 @@
                 </div>
             </div>`
             );
-
-            //Select 2
-            $('select').selectpicker('refresh');
-            // End Select2
 
             $('.qty').autoNumeric('init', formatQty);
             $('.subtotal').autoNumeric('init', formatCur);
@@ -407,6 +451,7 @@
             });
         });
 
+        //Delete Detail
         $(document).on('click', '.deleteDetail', function(){
 
             const swalWithBootstrapButtons = Swal.mixin({

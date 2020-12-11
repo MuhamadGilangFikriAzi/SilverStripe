@@ -13,7 +13,15 @@ use SilverStripe\Assets\Upload;
 class AgentDataPageController extends PageController{
 
     private static $allowed_actions = [
-        'getData','edit','delete','store','update','dropZone','getDropZone','getProperty'
+        'getData',
+        'edit',
+        'delete',
+        'store',
+        'update',
+        'dropZone',
+        'getDropZone',
+        'getProperty',
+        'renderPropertyData'
     ];
 
     private function getUploadImagesFieldGroup() {
@@ -149,9 +157,7 @@ class AgentDataPageController extends PageController{
                 'URL' => $value->File()->getAbsoluteUrl(),
                 'Size' => $value->File()->getSize()
             ];
-
         }
-
         $data = [
             'status' => 200,
             'message' => 'data has ben succusfuly geter',
@@ -254,6 +260,17 @@ class AgentDataPageController extends PageController{
             'data' => []
         ];
         return json_encode($data);
+    }
+
+    public function renderPropertyData(){
+        $data = $this->getPropertyData();
+
+        $result = "<option value=''>-- select property --</option>";
+        foreach ($data as $value) {
+            $result .= "<option value='{$value->ID}'>{$value->Name}</option>";
+        }
+        print_r($result);die();
+        return $result;
     }
 
 }
